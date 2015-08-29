@@ -1,10 +1,9 @@
 ##
-# @version		$Id: htaccess.txt   2014-10-07 15:47:33Z Gad Ocansey  +233505284060$
+# @version		$Id: htaccess.txt   2014-10-07 15:47:33Z 
 # @package		root
 # @copyright	        Copyright (C) 2014 - 2015 Takoradi Polytechnic. All rights reserved.
 # @license		GNU General Public License version 2 or later; see LICENSE.txt
 ##
- 
 
 SetEnv TZ Africa/Accra
 SetEnv SERVER_ADMIN gadocansey@google.com
