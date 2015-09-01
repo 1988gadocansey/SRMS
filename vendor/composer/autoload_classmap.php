@@ -11,7 +11,6 @@ return array(
     'CI_Image_lib' => $baseDir . '/_library_/_classes_/Image_lib.php',
     'CI_Input' => $baseDir . '/_library_/_classes_/Input.php',
     'CI_URI' => $baseDir . '/_library_/_classes_/URI.php',
-    'OS_Pagination' => $baseDir . '/_library_/_classes_/pagination.php',
     'Session' => $baseDir . '/_library_/_classes_/Session.class.php',
     'Zend\\Http\\Client\\Adapter\\Curl' => $baseDir . '/_library_/_classes_/Curl.php',
     'Zend\\Http\\PhpEnvironment\\RemoteAddress' => $baseDir . '/_library_/_classes_/RemoteAddress.php',
@@ -22,6 +21,9 @@ return array(
     '_classes_\\skeleton' => $baseDir . '/_library_/_classes_/skeleton.class.php',
     'classes\\Messages' => $baseDir . '/_library_/_classes_/massage.class.php',
     'classes\\Notifications' => $baseDir . '/_library_/_classes_/Notifications.class.php',
+    'classes\\OS_Pagination' => $baseDir . '/_library_/_classes_/pagination.php',
     'classes\\Student' => $baseDir . '/_library_/_classes_/Student.class.php',
     'classes\\Users' => $baseDir . '/_library_/_classes_/users.class.php',
+    'classes\\cryptCls' => $baseDir . '/_library_/_classes_/cryptCls.php',
+    'formatingclass' => $baseDir . '/_library_/_classes_/formating.class.php',
 );

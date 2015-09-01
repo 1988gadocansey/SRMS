@@ -3,7 +3,7 @@ namespace classes;
 class OS_Pagination {
     
 	var $php_self;
-	var $rows_per_page = 10; //Number of records to display per page
+	var $rows_per_page = 50; //Number of records to display per page
 	var $total_rows = 0; //Total number of rows returned by the query
 	var $links_per_page = 5; //Number of links to display per page
 	var $append = ""; //Paremeters to append to pagination links
@@ -25,7 +25,7 @@ class OS_Pagination {
 	 * @param string $append Parameters to be appended to pagination links 
 	 */
 	
-	function __construct($sql,$sqlquery, $rows_per_page = 10, $links_per_page = 5, $append = "") {
+	function __construct($sql,$sqlquery, $rows_per_page = 50, $links_per_page = 5, $append = "") {
 		 global $sql;
 		$this->sql = $sqlquery;
                 $this->odb = $sql;

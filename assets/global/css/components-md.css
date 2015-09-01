@@ -14,13 +14,18 @@ General reset
 /* Set default body */
 body {
   color: #333333;
-  font-family: "Open Sans", sans-serif;
+  font-family: "Roboto",Helvetica,Arial,sans-serif;
   padding: 0px !important;
   margin: 0px !important;
   font-size: 13px;
   direction: ltr;
 }
-
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.1;
+    color: #000;
+}
 /*
  Internet Explorer 10 doesn't differentiate device width from viewport width, and thus doesn't 
  properly apply the media queries in Bootstrap's CSS. To address this, 
@@ -947,7 +952,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Roboto",Helvetica,Arial,sans-serif;
   font-weight: 300;
 }
 
@@ -2697,7 +2702,7 @@ Dropdown Menu
   padding: 0px;
   background-color: #ffffff;
   border: 1px solid #eee;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Roboto", Helvetica, Arial, sans-serif;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   -ms-border-radius: 2px;
@@ -3849,7 +3854,7 @@ Customized Bootstrap Labels
   font-weight: 300;
   padding: 3px 6px 3px 6px;
   color: #fff;
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Roboto', sans-serif,Helvetica,Arial,sans-serif;
 }
 .label.label-sm {
   font-size: 12px;
@@ -6152,7 +6157,7 @@ Light Table
   font-weight: 600;
   font-size: 13px;
   color: #93a2a9;
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Roboto', sans-serif,Helvetica,Arial,sans-serif;
   border: 0;
   border-bottom: 1px solid #F2F5F8;
 }

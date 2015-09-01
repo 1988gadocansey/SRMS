@@ -141,10 +141,10 @@ public function getSession($preference){
 }
 
 public function getProgram($pcode){
-    $query=$this->connect->Prepare("SELECT * FROM tbl_programs WHERE pcode='$pcode'");
+    $query=$this->connect->Prepare("SELECT * FROM tpoly_programme WHERE PROGRAMMECODE='$pcode'");
     $output= $this->connect->Execute($query);
      $a=$output->FetchNextObject() ;
-    return $a->NAME;
+    return $a->PROGRAMME;
 }
 public function getApplicationMode($mode){
      $query=   $this->connect->Prepare("SELECT * FROM tbl_mode_application WHERE ID='$mode'");
