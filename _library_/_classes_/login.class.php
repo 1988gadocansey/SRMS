@@ -47,7 +47,7 @@ namespace _classes_;
                         $this->mode = MCRYPT_MODE_ECB;
                         $this->Mhash();
                         $this->stream = mcrypt_create_iv(mcrypt_get_iv_size($this->algorithm, $this->mode), MCRYPT_RAND);
-                        
+                        $session->set("IP",$_SERVER['REMOTE_ADDR']);
 		}
                 public function encodeString($url){
                         return(mcrypt_encrypt($this->algorithm, $this->key, $url, $this->mode, $this->stream));	
