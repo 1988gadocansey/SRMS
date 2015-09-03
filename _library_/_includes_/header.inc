@@ -1,7 +1,7 @@
 <!DOCTYPE html>
  <?php include("Session.php"); ?>
 <html lang="en">
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<meta http-equiv="content-type" content="text/html;charset=UTF-8"  content="RevealTrans(duration=7.0,Transition=1)" />
 <head>
 <meta charset="utf-8"/>
 <title>Student Records Management Systems | SRMS</title>

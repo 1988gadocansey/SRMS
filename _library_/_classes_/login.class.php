@@ -47,7 +47,8 @@ namespace _classes_;
                         $this->mode = MCRYPT_MODE_ECB;
                         $this->Mhash();
                         $this->stream = mcrypt_create_iv(mcrypt_get_iv_size($this->algorithm, $this->mode), MCRYPT_RAND);
-                        $session->set("IP",$_SERVER['REMOTE_ADDR']);
+                        $_SESSION[IP]=$_SERVER['REMOTE_ADDR'];
+                       // echo $this->remoteip;
 		}
                 public function encodeString($url){
                         return(mcrypt_encrypt($this->algorithm, $this->key, $url, $this->mode, $this->stream));	
@@ -88,17 +89,23 @@ namespace _classes_;
 
 				if($stmt->RecordCount() > 0){
 					
-				 
+				 // check if if its the server that the app is runnin
+                                   
+                                
+                                
 				$userid=$stmt->FetchNextObject();
 				$this->storeAuth($userid->ID, $userid->USERNAME);
                                 $_SESSION['USERNAME']=$userid->USERNAME;
                                 $_SESSION['level']=$userid->USER_TYPE;
                                  $_SESSION['ID']=$userid->ID;
+                                 
+                           if($this->remoteip=='127.0.0.1' || $userid->NET_ADD=='Any'){
 				$this->setLog("Login",$this->session->get("USERNAME") ." has login into the system  ");
                                 $this->session->set("USERNAME", $userid->USERNAME);
                                 $date=  strtotime(NOW);
                                 $stmt=$this->connect->Prepare("UPDATE tbl_auth SET LAST_LOGIN='$date' WHERE ID='$_SESSION[ID]'");
                                 $this->connect->Execute($stmt);
+                                
                                 if($_SESSION['level']=="administrator"){
 				header('Location: ' . $this->homepage);	
 				
@@ -106,15 +113,18 @@ namespace _classes_;
                                 else{
                                     header("Location:dashboard.php");
                                 }
-					
-				}else{
+                                }	
+				
+                                elseif ($this->remoteip!=$userid->NET_ADD) {
+                                    header( 'refresh: 2000; url=index.php?unauthorize_domain' );
+                                }
+				
+			       }else{ 
+			 
                                     	$this->logout("wrong");
 					
-				}
-				
-				
-			}else{ 
-			//error msg
+				 
+                                }
 			}
 			
 		}//end
@@ -214,8 +224,19 @@ namespace _classes_;
 
               <div class="alert alert-danger">
 			<button class="close" data-close="alert"></button>
-			<center><span>
+                        <center><span style="font-size: 16px">
                                 Username or Password is invalid </span></center>
+		</div>
+              <?php
+             
+         }
+         elseif(isset($_GET[unauthorize_domain]) ){
+              ?>
+
+              <div class="alert alert-warning">
+			<button class="close" data-close="alert"></button>
+                        <center><span style="font-size: 16px">
+                               You are not authorized on this device or computer </span></center>
 		</div>
               <?php
              

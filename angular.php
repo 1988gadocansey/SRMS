@@ -31,7 +31,7 @@ table tr:nth-child(even) {
 <script>
 var app = angular.module('myApp', []);
 app.controller('customersCtrl', function($scope, $http) {
-   $http.get("customers_mysql.php")
+   $http.get("customers_mysql.php?id='100'")
    .success(function (response) {$scope.names = response.records;});
 });
 </script>

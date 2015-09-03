@@ -15,7 +15,7 @@ class JConfig {
 	public $server = 'localhost';
 	public $user = 'root';
 	public $database = 'coby_portal_local_db';
-	public $password = "";
+	public $password = "PRINT45dull";
 	public $secret='my_poly_my_gad';
 	public $debug = false;
 	public $autoRollback= true;

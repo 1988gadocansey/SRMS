@@ -5,7 +5,7 @@
       session_start();
 	
     }
-	if(!isset($_SESSION['ID']))
+	if(!isset($_SESSION['USERNAME']))
 	{
 
 		header("location:index.php");
@@ -30,7 +30,7 @@ function logOut(){
         setcookie(session_name(), '', time()-42000, '/'); 
     } 
     session_destroy();  
-    header("location:index.php?logout=1");
+    header("location:index.php?logoutS=1");
 } 
 
 # Session Logout after in activity 
