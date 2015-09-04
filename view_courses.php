@@ -72,15 +72,15 @@ ini_set('display_errors', 0);
                                                  <button   class="btn btn-primary waves-effect waves-button dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bars"></i> Export Data</button>
                                                         <ul class="dropdown-menu">
                                             
-                                                <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'csv',escape:'false'});"><img src='img/icons/csv.png' width="24"/> CSV</a></li>
-                                                <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'txt',escape:'false'});"><img src='img/icons/txt.png' width="24"/> TXT</a></li>
+                                                            <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'csv',escape:'false'});"><img src='assets/icons/csv.png' width="24"/> CSV</a></li>
+                                                <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'txt',escape:'false'});"><img src='assets/icons/txt.png' width="24"/> TXT</a></li>
                                                 <li class="divider"></li>
-                                                <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'excel',escape:'false'});"><img src='img/icons/xls.png' width="24"/> XLS</a></li>
-                                                <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'doc',escape:'false'});"><img src='img/icons/word.png' width="24"/> Word</a></li>
-                                                <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'powerpoint',escape:'false'});"><img src='img/icons/ppt.png' width="24"/> PowerPoint</a></li>
+                                                <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'excel',escape:'false'});"><img src='assets/icons/xls.png' width="24"/> XLS</a></li>
+                                                <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'doc',escape:'false'});"><img src='assets/icons/word.png' width="24"/> Word</a></li>
+                                                <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'powerpoint',escape:'false'});"><img src='assets/icons/ppt.png' width="24"/> PowerPoint</a></li>
                                                 <li class="divider"></li>
-                                                <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'png',escape:'false'});"><img src='img/icons/png.png' width="24"/> PNG</a></li>
-                                                <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'pdf',escape:'false'});"><img src='img/icons/pdf.png' width="24"/> PDF</a></li>
+                                                <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'png',escape:'false'});"><img src='assets/icons/png.png' width="24"/> PNG</a></li>
+                                                <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'pdf',escape:'false'});"><img src='assets/icons/pdf.png' width="24"/> PDF</a></li>
                                               </ul>
                                               </div>
                             
@@ -193,19 +193,19 @@ ini_set('display_errors', 0);
 						</div>
 			<div class="portlet-body">
                                             <?php 
-                                            $progrm=$_SESSION[program];                                       
+                                            $program=$_SESSION[program];                                       
                                             $course=$_SESSION[course];
                                             $term=$_SESSION[term];
                                             $level=$_SESSION[levels];
                                             
                                             if($term=="All terms" or $term==""){ $term=""; }else {$term_=" and COURSE_SEMESTER = '$term' "  ;}
                                             if($level=="All level" or $level==""){ $level=""; }else {$level_=" and COURSE_LEVEL = '$level' "  ;}
-                                            if($program=="All programs" or $program==""){ $program=""; }else {$program_=" and PROGRAMME = '$progrm' "  ;}
+                                            if($program=="All programs" or $program==""){ $program=""; }else {$program_=" and PROGRAMME = '$program' "  ;}
                                             if($course=="All Courses" or $course=="" ){ $course=""; }else {$course_=" and COURSE_CODE = '$course' "  ;}
 
 
                                             $query="SELECT  * FROM tpoly_courses  WHERE 1  $term_ $level_ $program_ $course_   ORDER BY COURSE_NAME ASC ";
-                                            
+                                             
                                                 $page=new classes\OS_Pagination($query, $query) ;
                                                 $stmt= $page->paginate() ;
                                             if($stmt->RecordCount()>0){
@@ -226,11 +226,11 @@ ini_set('display_errors', 0);
                                     <th data-column-id="Semester" style="text-align:center">SEMESTER</th>
                                      <th data-column-id="Type">TYPE</th>
                                      
-                                     <th data-column-id=" " data-order="" style="text-align:center" colspan="2">Actions</th>
+                                     <th data-column-id=" " data-order="" style="text-align: center" colspan="2">ACTIONS</th>
                                       
                                 </tr>
                             </thead>
-                            <p align="center"style="color:red">Total Records - <?php echo $stmt->RecordCount() ?></p>
+                            <p align="center"style="color:red">  <?php echo $stmt->RecordCount() ?> Records </p>
                             <tbody>
                                 <?php
                                 
@@ -256,7 +256,8 @@ ini_set('display_errors', 0);
                                     <td style="text-align: center"><?php echo $sem ?></td>
                                     <td style="text-align: center"><?php echo $rtmt["COURSE_TYPE"] ?></td>
                                      
-                                    <td><a href=""><i class="fa fa-edit"></i>Edit</a><a href=""><i class="fa fa-trash">Delete</i></a> </td>
+                                    <td><a href=""><i style="color: green" class=" md-mode-edit">Edit</i></a></td>
+                                    <td><a href=""><i style="color: red" class="md md-clear">Delete</i></a> </td>
                                       
                                      
                                     </tr>
