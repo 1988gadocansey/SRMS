@@ -2109,7 +2109,7 @@ Quick Sidebar Content
 }
 
 .page-head {
-  background: #fff;
+   background: none;
 }
 .page-head .container {
   position: relative;
@@ -2165,7 +2165,7 @@ Quick Sidebar Content
 @media (max-width: 991px) {
   /* 991px */
   .page-head {
-    background: #EFF3F8;
+    color: #5E5E5E;
   }
   .page-head > .container {
     width: 100%;

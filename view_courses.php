@@ -93,7 +93,7 @@ ini_set('display_errors', 0);
                      
                 	    <td width="20%">
 
-                                    <select class='form-control'  name='subject'  style="margin-left:0%; width:167% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?program='+escape(this.value);" >
+                                    <select class='form-control'  name='subject'  style="margin-left:-38%; width:167% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?program='+escape(this.value);" >
                                 <option value=''>Filter by programme</option>
                                         <option value='All programs'>All Programs</option>
                                     <?php 
@@ -158,7 +158,7 @@ ini_set('display_errors', 0);
                     <td>&nbsp;</td>
                       <td width="20%">
 
-                        <select class='form-control'  name='term'  style="margin-left:55%;  width:58% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?term='+escape(this.value);" >
+                        <select class='form-control'  name='term'  style="margin-left:92%;  width:58% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?term='+escape(this.value);" >
                                          <option value=''>Filter by semester</option>
                                         <option value='All terms'>All semesters</option>
                                             <option value='1'<?php if($_SESSION[term]=='1'){echo 'selected="selected"'; }?>>1st</option>
