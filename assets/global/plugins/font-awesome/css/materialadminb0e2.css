@@ -2721,7 +2721,7 @@ label {
 .form-group > label,
 .form-group .control-label {
   font-size: 12px;
-  opacity: 0.5;
+  opacity: 1.5;
   margin-bottom: 0;
 }
 .form .form-group > label,

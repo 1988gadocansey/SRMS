@@ -1,7 +1,7 @@
 <!DOCTYPE html>
  <?php include("Session.php"); ?>
 <html lang="en">
-<meta http-equiv="content-type" content="text/html;charset=UTF-8"  content="RevealTrans(duration=7.0,Transition=1)" />
+
 <head>
 <meta charset="utf-8"/>
 <title>Student Records Management Systems | SRMS</title>
@@ -16,8 +16,10 @@
 <link href="assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link href="assets/global/plugins/font-awesome/css/material-design-iconic-font.mine7ea.css" rel="stylesheet" type="text/css">
 <link href="assets/global/plugins/font-awesome/css/materialadminb0e2.css" rel="stylesheet" type="text/css">
+ <link href="assets/global/plugins/font-awesome/css/app.min.css" rel="stylesheet" type="text/css"> 
 <link href="assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css">
 <link href="assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="assets/bootgrid/jquery.bootgrid.min.css" rel="stylesheet">
 <link href="assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css">
 <!-- END GLOBAL MANDATORY STYLES -->
 <!-- BEGIN THEME STYLES -->
@@ -29,7 +31,10 @@
 <!-- END THEME STYLES -->
 <link rel="shortcut icon" href="favicon.png"/>
 <style>
-    
+    #data-table-command  tr:hover{
+        
+        background-color: #FFFCBE;
+    }
 </style>
 <script>
 /*

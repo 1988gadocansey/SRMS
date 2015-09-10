@@ -54,7 +54,53 @@ ini_set('display_errors', 0);
 	<div class="page-content">
 		<div class="container">
 			 
-			 
+			 <div class="modal fade" id="mount" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Add Programs</h4>
+                                        </div>
+                                        <div class="modal-body">
+                               <form action="program.php?add=1" method="POST" class="form-horizontal" role="form">
+                                                 <div class="card-body card-padding">
+                                                     <div class="form-group">
+                                                         <label for="inputEmail3"    class="col-sm-2 control-label">Name</label>
+                                                         <div class="col-sm-10">
+                                                             <div class="fg-line">
+                                                                 <input type="text" class="form-control input-sm" id="" name="name"placeholder="Program Name" required="">
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                     <div class="form-group">
+                                                         <label for="inputPassword3" class="col-sm-2 control-label">Code</label>
+                                                         <div class="col-sm-10">
+
+                                                             <div class="fg-line">
+                                                                 <input type="text" name ="code" required="" class="form-control input-sm" id=" " placeholder="Enter program code">
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                      <div class="form-group">
+                                                         <label for="inputPassword3" class="col-sm-2 control-label">Department</label>
+                                                         <div class="col-sm-10">
+
+                                                             <div class="fg-line">
+                                                                 <input type="text" name ="department" required="" class="form-control input-sm" id=" " placeholder="Enter department">
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                      
+                                                 </div>
+                                             
+                                        </div>
+                                        <div class="modal-footer">
+											<button type="button" data-dismiss="modal" class="btn btn-warning">Close</button>
+											<button type="button" class="btn btn-primary">Ok</button>
+										</div>
+                                   </form>
+                                    </div>
+                                </div>
+                            </div>
 			<!-- END PAGE BREADCRUMB -->
 			<!-- BEGIN PAGE CONTENT INNER -->
 			<div class="row">
@@ -63,12 +109,13 @@ ini_set('display_errors', 0);
 						<p>
 							Course Databank
 						</p>
-                                                <div style="margin-top:-3%;float:right">
+                                                <div style="margin-top:-2.2%;float:right">
                                                     <button id="sample_editable_1_new" class="btn green">
 											Add New Course <i class="fa fa-plus"></i>
 											</button>
-                                                    <button class="btn btn-success"><i class="fa fa-cloud-upload"></i>Sync to Online Portal</button>
-                                                <button class="btn btn-primary"><i class="fa fa-upload"></i>import course</button>
+                                                    <button class="btn btn-success">Sync to Online Portal<i class="fa fa-cloud-upload"></i></button>
+                                                <button class="btn  btn-success">import course<i class="md md-file-upload"></i></button>
+                                                 <button  data-target="#mount" data-toggle="modal" class="btn bgm-pink waves-effect">Mount Course<i class="fa fa-tasks"></i></button>
                                                  <button   class="btn btn-primary waves-effect waves-button dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bars"></i> Export Data</button>
                                                         <ul class="dropdown-menu">
                                             
@@ -212,14 +259,14 @@ ini_set('display_errors', 0);
                                          ?>
                            
                     <div class="table-responsive">
-                        <table id="data-table-command" class="table table-bordered table-vmiddle table-hover"  >
+                        <table   id="data-table-command" class="table table-bordered table-vmiddle"  >
                             <thead>
                                 <tr>
                                     
                                      <th  data-order="asc">NO</th>
                                      <th data-column-id="Course" data-type=" " data-toggle="tooltip">COURSE</th>
                                      <th data-column-id="Course Code" data-type=" " data-toggle="tooltip">CODE</th>
-                                     <th data-column-id="Programme" data-type=" " data-toggle="tooltip">PROGRAMME</th>
+                                      <th data-column-id="Programme" data-type=" " data-toggle="tooltip">PROGRAMME</th> 
                                     <th style="text-align:center" data-type="string" data-column-id="Class" style="text-align:center">CREDIT</th>
                                    
                                     <th data-column-id="Level" data-order="asc" style="text-align:center">LEVEL</th>
@@ -248,13 +295,13 @@ ini_set('display_errors', 0);
                                     <tr>
                                     
                                      <td><?php echo $count ?></td>
-                                     <td><?php echo $rtmt[COURSE_NAME] ?></td>
-                                    <td style="text-align:left"><?php  echo $rtmt[COURSE_CODE] ; ?></td>
-                                    <td><?php echo $help->getProgram($rtmt[PROGRAMME]); ?></td>
+                                     <td style="text-align:left;text-transform: capitalize"><?php echo $rtmt[COURSE_NAME] ?></td>
+                                    <td ><?php  echo $rtmt[COURSE_CODE] ; ?></td>
+                                  <td style="text-transform: capitalize"><?php echo strtoupper($help->getProgram($rtmt[PROGRAMME])); ?></td> 
                                     <td style="text-align: center"><?php echo $rtmt["COURSE_CREDIT"] ?></td>
                                     <td style="text-align: center"><?php echo $rtmt["COURSE_LEVEL"] ?></td>
-                                    <td style="text-align: center"><?php echo $sem ?></td>
-                                    <td style="text-align: center"><?php echo $rtmt["COURSE_TYPE"] ?></td>
+                                    <td style="text-align: center"><?php echo strtoupper($sem) ?></td>
+                                    <td style="text-align: center"><?php echo strtoupper( $rtmt["COURSE_TYPE"]) ?></td>
                                      
                                     <td><a href=""><i style="color: green" class=" md-mode-edit">Edit</i></a></td>
                                     <td><a href=""><i style="color: red" class="md md-clear">Delete</i></a> </td>
@@ -300,7 +347,14 @@ ini_set('display_errors', 0);
 </div>
 <?php include("_library_/_includes_/scripts.php");  ?>
 
- 
+<script>
+jQuery(document).ready(function() {       
+   Metronic.init(); // init metronic core components
+Layout.init(); // init current layout
+Demo.init(); // init demo features
+   TableAdvanced.init();
+});
+</script>
 <?php include("_library_/_includes_/export.php");  ?>
  
 

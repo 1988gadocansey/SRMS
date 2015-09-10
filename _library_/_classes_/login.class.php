@@ -222,22 +222,20 @@ namespace _classes_;
          if(isset($_GET[login])=='error'){
               ?>
 
-              <div class="alert alert-danger">
-			<button class="close" data-close="alert"></button>
-                        <center><span style="font-size: 16px">
-                                Username or Password is invalid </span></center>
-		</div>
+               <div class='alert alert-danger' style='margin-top:0%;font-weight:bolder;font-size:15px'>
+                <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+                <strong>Warning!</strong> Invalid Username or Password
+         </div>  
               <?php
              
          }
          elseif(isset($_GET[unauthorize_domain]) ){
               ?>
-
-              <div class="alert alert-warning">
-			<button class="close" data-close="alert"></button>
-                        <center><span style="font-size: 16px">
-                               You are not authorized on this device or computer </span></center>
-		</div>
+              <center><div class='alert alert-warning' style='margin-top:0%;font-weight:bolder;font-size:15px'>
+                <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+                <strong>Warning!</strong> You are not authorized on this device
+         </div></center>
+              
               <?php
              
          }
