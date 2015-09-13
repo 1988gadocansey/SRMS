@@ -46,7 +46,7 @@ if($stmt->RecordCount() > 0){
                         echo "
                                
                                      
-                                     <li class=\"active dropdown\"><a href=\"{$link}.php\"><i class=\"icon-doc\"></i>$name</a></li>
+                                     <li class=\"active dropdown\"><a href=\"{$link}\"><i class=\"icon-doc\"></i>$name</a></li>
                                ";
                           
                            

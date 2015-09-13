@@ -1,6 +1,6 @@
 <?php
-namespace classes;
-use classes\JConfig;
+namespace _classes_;
+ 
 class cryptCls {
 	private $algorithm;
 	private $key;
@@ -9,7 +9,7 @@ class cryptCls {
 	private $stream;
 	
 	public function __construct(){
-		$this->config = new JConfig();
+		//$this->config = new JConfig();
 		$this->algorithm = MCRYPT_RIJNDAEL_256;	
 		$this->mode = MCRYPT_MODE_ECB;
 		$this->Mhash();

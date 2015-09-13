@@ -13,7 +13,7 @@ table tr:nth-child(even) {
   background-color: #ffffff;
 }
 </style>
-<script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+<script src= "assets/ajax.googleapis.com_ajax_libs_angularjs_1.3.14_angular.min.js"></script>
 <body>
 
 <div ng-app="myApp" ng-controller="customersCtrl"> 

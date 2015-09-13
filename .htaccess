@@ -80,10 +80,10 @@ php_value log_errors_max_len 0
 #deny from 83.222.23.219
 #allow from all
 # custom error documents
-ErrorDocument 401  https://localhost/Takoradi_Poly_Online_System/404.html
-ErrorDocument 403  https://localhost/Takoradi_Poly_Online_System/404.html
-ErrorDocument 404  https://localhost/Takoradi_Poly_Online_System/404.htm
-ErrorDocument 500 https://localhost/Takoradi_Poly_Online_System/505.html
+ErrorDocument 401  https://localhost/Students_Records_Management_System/404.html
+ErrorDocument 403  https://localhost/Students_Records_Management_System/404.html
+ErrorDocument 404  https://localhost/Students_Records_Management_System/404.htm
+ErrorDocument 500 https://localhost/Students_Records_Management_System505.html
 #Denies any request for static files (images, css, etc) if referrer is not local site or empty.
 RewriteCond %{HTTP_REFERER} !^$
 RewriteCond %{REQUEST_URI} !^/(wp-login.php|wp-admin/|wp-content/plugins/|wp-includes/).* [NC]

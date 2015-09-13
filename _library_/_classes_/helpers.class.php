@@ -146,17 +146,71 @@ public function getProgram($pcode){
      $a=$output->FetchNextObject() ;
     return $a->PROGRAMME;
 }
+public function getCourse($code){
+    $query=$this->connect->Prepare("SELECT COURSE_CODE FROM tpoly_courses WHERE COURSE_CODE='$code'");
+    $output= $this->connect->Execute($query);
+     $a=$output->FetchNextObject() ;
+    return $a->COURSE_CODE;
+}
+public function getCourseType($code){
+    $query=$this->connect->Prepare("SELECT COURSE_TYPE FROM tpoly_courses WHERE COURSE_CODE='$code'");
+    $output= $this->connect->Execute($query);
+     $a=$output->FetchNextObject() ;
+    return $a->COURSE_TYPE;
+}
+public function getYear($code){
+    $query=$this->connect->Prepare("SELECT COURSE_TYPE FROM tpoly_courses WHERE COURSE_CODE='$code'");
+    $output= $this->connect->Execute($query);
+     $a=$output->FetchNextObject() ;
+    return $a->COURSE_TYPE;
+}
 public function getApplicationMode($mode){
      $query=   $this->connect->Prepare("SELECT * FROM tbl_mode_application WHERE ID='$mode'");
     $output= $this->connect->Execute($query);
     $a=$output->FetchNextObject();
     return $a->MODE;
 }
+ public function password() {
+        $alphabet = "abcdefghjkmnpqrstuwxyz23456789";
+        $pass = array(); //remember to declare $pass as an array
+        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+        for ($i = 0; $i < 8; $i++) {
+                $n = rand(0, $alphaLength);
+                $pass[] = $alphabet[$n];
+        }
+        return implode($pass); //turn the array into a string
+    }
+     
+        //generating passwords from students table and puting it into the account table
+        public function generateAccount(){
+         $con=  Core::getInstance();
+         $query=$con->dbh->query("SELECT * FROM students ");
+         $a=$result = $query->fetchAll();
+         $output=count($a);
+         $query2=$con->dbh->query("SELECT * FROM students ");
+          for($y=0;$y<$output;$y++){
 
+              $output1 = $query2->fetchAll();
+                  foreach ($output1 as $values){
+                    extract($values);
+                      $password= $this->password();
+                      $encrypted_password=md5($password);
+                      $student_index=$indexno;
+                      $program2=   $programme;
+                      $program=  $this->getProgram($program2);
+                      $input=$con->dbh->query("SELECT * FROM account WHERE USERNAME='$student_index'");
+                  if(count($input->fetchAll())==0){
+                     $con->dbh->query("INSERT INTO account (USERNAME,PASSWORD,REAL_PASSWORD,PROGRAMMES,LEVEL) VALUES('$student_index','$encrypted_password','$password','$program','$level')") or die(header("location:dashboard.php"));
+                  }
+                }
+         }
+     }
+     
 /**
 ** required when the applicant finish working on form
 ** send sms and email to applicant upon receiving his or her form
 */
+     
 public function finalize($applicant){
 	
 	
