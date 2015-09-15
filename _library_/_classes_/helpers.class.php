@@ -136,8 +136,14 @@ public function ping($host, $port, $timeout) {
 public function getSession($preference){
     $query=  $this->connect->Prepare("SELECT * FROM tbl_session WHERE ID='$preference'");
     $output= $this->connect->Execute($query);
-    $a->FetchNextObject();
+   $output->FetchNextObject();
     return $a->name;
+}
+public function getName($student){
+    $query=  $this->connect->Prepare("SELECT NAME FROM tpoly_students WHERE INDEXNO='$student'");
+    $output= $this->connect->Execute($query);
+    $a=$output->FetchNextObject();
+    return $a->NAME;
 }
 
 public function getProgram($pcode){
@@ -147,10 +153,10 @@ public function getProgram($pcode){
     return $a->PROGRAMME;
 }
 public function getCourse($code){
-    $query=$this->connect->Prepare("SELECT COURSE_CODE FROM tpoly_courses WHERE COURSE_CODE='$code'");
+    $query=$this->connect->Prepare("SELECT COURSE_NAME FROM tpoly_courses WHERE COURSE_CODE='$code'");
     $output= $this->connect->Execute($query);
      $a=$output->FetchNextObject() ;
-    return $a->COURSE_CODE;
+    return $a->COURSE_NAME;
 }
 public function getCourseType($code){
     $query=$this->connect->Prepare("SELECT COURSE_TYPE FROM tpoly_courses WHERE COURSE_CODE='$code'");
@@ -171,7 +177,8 @@ public function getApplicationMode($mode){
     return $a->MODE;
 }
  public function password() {
-        $alphabet = "abcdefghjkmnpqrstuwxyz23456789";
+        $alphabet = "ABCDEFGHJKMNPQRSTUWXYZ23456789";
+        
         $pass = array(); //remember to declare $pass as an array
         $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
         for ($i = 0; $i < 8; $i++) {
@@ -183,29 +190,49 @@ public function getApplicationMode($mode){
      
         //generating passwords from students table and puting it into the account table
         public function generateAccount(){
-         $con=  Core::getInstance();
-         $query=$con->dbh->query("SELECT * FROM students ");
-         $a=$result = $query->fetchAll();
-         $output=count($a);
-         $query2=$con->dbh->query("SELECT * FROM students ");
-          for($y=0;$y<$output;$y++){
+         global $sql;
+         $query=$this->connect->Prepare("SELECT INDEXNO,LEVEL,`PROGRAMMECODE` FROM tpoly_students ");
+         $query1=$this->connect->Execute($query);
+          $result=$query1->FetchRow();
+         $output=count($result);
+         $query2=$this->connect->Prepare("SELECT INDEXNO,LEVEL,`PROGRAMMECODE` FROM tpoly_students ");
+         $query2_=$this->connect->Execute($query2); 
+         for($y=0;$y<$output;$y++){
 
-              $output1 = $query2->fetchAll();
+              $output1 = $query2_->FetchRow();
                   foreach ($output1 as $values){
                     extract($values);
                       $password= $this->password();
                       $encrypted_password=md5($password);
-                      $student_index=$indexno;
-                      $program2=   $programme;
+                      $student_index=$INDEXNO;
+                      $level=$LEVEL;
+                      $program2=   $PROGRAMMECODE;
                       $program=  $this->getProgram($program2);
-                      $input=$con->dbh->query("SELECT * FROM account WHERE USERNAME='$student_index'");
-                  if(count($input->fetchAll())==0){
-                     $con->dbh->query("INSERT INTO account (USERNAME,PASSWORD,REAL_PASSWORD,PROGRAMMES,LEVEL) VALUES('$student_index','$encrypted_password','$password','$program','$level')") or die(header("location:dashboard.php"));
-                  }
+                     
+                     $query=$this->connect->Prepare("INSERT INTO tpoly_log_portal (USERNAME,PASSWORD,REAL_PASSWORD,PROGRAMMES,LEVEL) VALUES('$student_index','$encrypted_password','$password','$program','$level')") ;
+                        if( $this->connect->Execute($query)){
+                            header("portal_passwords?success=1");
+                        }
                 }
          }
      }
      
+     /**
+      * @param sync $name CURL libray
+      * @access public
+      */
+     public function sync_to_online($url,$data){
+                $ch = \curl_init();
+               \curl_setopt($ch, CURLOPT_URL,$url);
+               \curl_setopt($ch, CURLOPT_POST,1);
+               \curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+               \curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+               $result=\curl_exec($ch);
+ 
+		\curl_close ($ch);
+                return $result;
+ 
+     }
 /**
 ** required when the applicant finish working on form
 ** send sms and email to applicant upon receiving his or her form
@@ -220,3 +247,4 @@ public function copyright(){
 }
 
 }
+

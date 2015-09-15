@@ -7,15 +7,16 @@ ini_set('display_errors', 0);
     require '_library_/_includes_/config.php';
    //require '_library_/_includes_/app_config.inc';
   
-$result = $sql->Prepare("SELECT  * FROM tpoly_courses  WHERE 1");
+$result = $sql->Prepare("SELECT * FROM `tpoly_log_portal`");
 $result_=$sql->Execute($result);
 
 $outp = "";
 while($rs = $result_->FetchRow()) {
     if ($outp != "") {$outp .= ",";}
-    $outp .= '{"Code":"'  . $rs["COURSE_CODE"] . '",';
-    $outp .= '"Name":"'   . $rs["COURSE_NAME"]        . '",';
-    $outp .= '"Level":"'. $rs["COURSE_LEVEL"]     . '"}'; 
+    $outp .= '{"Student":"'  . $rs["USERNAME"] . '",';
+    $outp .= '"Prog":"'   . $rs["PROGRAMME"]        . '",';
+    $outp .= '"Level":"'   . $rs["LEVEL"]        . '",';
+    $outp .= '"Pass":"'. $rs["REAL_PASSWORD"]     . '"}'; 
      
 }
 $outp ='{"records":['.$outp.']}';

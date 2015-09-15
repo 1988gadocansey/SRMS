@@ -5,7 +5,7 @@
  * 18/09/2014
  * @author Gad Ocansey
  */
-namespace classes;
+namespace _classes_;
  
 
 class Student {
@@ -22,6 +22,15 @@ class Student {
           
        
         $STM2 = $this->connect->Prepare("SELECT * FROM tbl_student  WHERE INDEXNO='$ID' ");
+        $row= $this->connect->Execute($STM2);
+        if($row){
+        return $row->FetchNextObject();
+        }
+    }
+    public function getStudentAccount($ID) {
+          
+       
+        $STM2 = $this->connect->Prepare("SELECT * FROM tpoly_log_portal  WHERE USERNAME='$ID' ");
         $row= $this->connect->Execute($STM2);
         if($row){
         return $row->FetchNextObject();

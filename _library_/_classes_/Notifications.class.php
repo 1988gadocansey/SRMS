@@ -144,6 +144,11 @@ class Notifications {
                 <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
                 <strong>Notification!</strong>   Semester openned successfully.
          </div>";}
+         elseif(isset($_GET['no_internet'])){
+             echo "<div class='alert alert-warning'>
+                <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+                <strong>Notification!</strong>   Please check your internet connection.
+         </div>";}
         else if(isset($_GET['action'])=='closed'){
              echo "<div class='alert alert-success'>
                 <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>

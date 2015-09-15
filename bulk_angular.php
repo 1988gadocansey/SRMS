@@ -18,11 +18,20 @@ table tr:nth-child(even) {
 
 <div ng-app="myApp" ng-controller="customersCtrl"> 
 
-<table>
+    <table class="table table-hover">
+    <tr>
+        <thead>
+        <th>STUDENT</th>
+        <th style="text-align: center">PROGRAMME</th>
+        <th>LEVEL</th>
+        <th>PASSWORD</th>
+        </thead>
+    </tr>
   <tr ng-repeat="x in names">
-    <td>{{x.Code}}</td>
-    <td>{{x.Name}}</td>
+    <td>{{x.Student}}</td>
+    <td style="text-align: left">{{x.Prog}}</td>
      <td>{{x.Level}}</td>
+     <td>{{x.Pass}}</td>
   </tr>
 </table>
 
@@ -31,7 +40,7 @@ table tr:nth-child(even) {
 <script>
 var app = angular.module('myApp', []);
 app.controller('customersCtrl', function($scope, $http) {
-   $http.get("customers_mysql.php?id='100'")
+   $http.get("bulk_password.php?id='100'")
    .success(function (response) {$scope.names = response.records;});
 });
 </script>

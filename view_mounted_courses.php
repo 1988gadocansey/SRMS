@@ -4,22 +4,71 @@ ini_set('display_errors', 0);
     require '_ini_.php';
     require '_library_/_includes_/config.php';
     require '_library_/_includes_/app_config.inc';
+    $url="http://www.tpolyonline.com/Portal/sync_from_local.php";
     $help=new _classes_\helpers();
     $notify=new _classes_\Notifications();
     $security=new _classes_\cryptCls();
-        
+    if($_GET[program]){
+        $_SESSION[program]=$_GET[program];
+        }
+
+        if($_GET[course]){
+        $_SESSION[course]=$_GET[course];
+        }
+
+        if($_GET[year]){
+        $_SESSION[year]=$_GET[year];
+        }
+
+        if($_GET[term]){
+        $_SESSION[term]=$_GET[term];
+        }
+        if($_GET[level]){
+        $_SESSION[levels]=$_GET[level];
+        }
+
         // mount course
          if (isset($_POST['go'])){
               
-             $code=$help->getCourse($_POST[course]);
+             $course=$help->getCourse($_POST[course]);
              $type=$help->getCourseType($_POST[course]);
              $year=$notify->getyear();
              print_r($query=$sql->Prepare("INSERT INTO tpoly_mounted_courses SET  COURSE_NAME=".$sql->Param('a').", COURSE_CODE=".$sql->Param('b')."  , COURSE_CREDIT=".$sql->Param('c').", COURSE_SEMESTER=".$sql->Param('d').",COURSE_LEVEL=".$sql->Param('e').",COURSE_TYPE=".$sql->Param('f').",PROGRAMME=".$sql->Param('g')." ,LECTURER=".$sql->Param('h').",COURSE_YEAR=".$sql->Param('i').""));
 
-           if( $query=$sql->Execute( $query,array($_POST[course],$code,$_POST[credit],$_POST[term],$_POST[level],$type,$_POST[program],$_POST[lecturer],$_POST[year]))){
+           if( $query=$sql->Execute( $query,array($course,$_POST[course] ,$_POST[credit],$_POST[term],$_POST[level],$type,$_POST[program],$_POST[lecturer],$_POST[year]))){
               
               header("location:view_mounted_courses?success");
               }
+         }
+         if(isset($_POST[sync])){
+             if($help->ping("www.google.com",80,20)){
+             $string=$sql->Prepare($_SESSION[last_query]);
+             $row2=$sql->Execute($string);
+                                    
+                while($row=$row2->FetchRow()){
+                     set_time_limit(500);
+                    $course_name= $row[COURSE_NAME] ;$course_code=$row[COURSE_CODE];$credit=$row[COURSE_CREDIT];$level=$row[COURSE_LEVEL];
+                    $semester=$row[COURSE_SEMESTER];$year=$row[COURSE_YEAR];$program=$row[PROGRAMME];$lecturer=$row[LECTURER];$type=$row[COURSE_TYPE];
+
+                     $ins=" COURSE_NAME='$course_name', COURSE_CODE='$course_code',  COURSE_CREDIT='$credit', COURSE_LEVEL='$level', COURSE_SEMESTER='$semester', COURSE_YEAR='$year', COURSE_TYPE='$type', PROGRAMME='$program', LECTURER='$lecturer'";
+                      
+                    $post = array('type'=>'mounted_courses','data'=>$ins,'user'=>$_POST['headings'],'pass'=>$_POST['footing']);
+                    $result=$help->sync_to_online($url, $post);
+                    if($result ){  
+	
+                   $query=$sql->Prepare("UPDATE tpoly_mounted_courses SET SYNC='1'  where ID='$row[ID]'");
+                    if($sql->Execute($query)){
+                        header("location:view_mounted_courses?success");
+                    }
+                       
+	 
+                    }
+                }
+                       
+             }
+             else{
+                   header("location:view_mounted_courses?no_internet");
+             }
          }
         
 
@@ -67,7 +116,7 @@ ini_set('display_errors', 0);
                                                          <label for="inputEmail3s"    class="col-sm-2 control-label">Program</label>
                                                          <div class="col-sm-10">
                                                              <div class="fg-line">
-                                                                 <select class='form-control input-sm'  name='program' required="" style="" >
+                                                                 <select class='select2_category form-control input-sm'  name='program' required="" style="" >
                                                                      <option value=''>Select program</option>
                                                                         
                                                                     <?php 
@@ -94,7 +143,7 @@ ini_set('display_errors', 0);
                                                          <label for="inputEmaisl3"    class="col-sm-2 control-label">Course</label>
                                                          <div class="col-sm-10">
                                                              <div class="fg-line">
-                                                                <select class='form-control input-sm'  name='course'  style="" >
+                                                                <select class='select2_category form-control input-sm'  name='course'  style="" >
                                                                 <option value=''>Filter Courses</option>
                                                                         <option value='All Courses'>All Courses</option>
                                                                     <?php 
@@ -198,7 +247,7 @@ ini_set('display_errors', 0);
                                                          <label for="inputEmail3ds"    class="col-sm-2 control-label">Lecturer</label>
                                                          <div class="col-sm-10">
                                                              <div class="fg-line">
-                                                                 <select class='form-control input-sm tagsinput'  name='lecturer'  required=""  >
+                                                                 <select class='select2_category form-control input-sm tagsinput'  name='lecturer'  required=""  >
                                                                 <option value=''>Select lecturer</option>
                                                                        
                                                                     <?php 
@@ -241,12 +290,12 @@ ini_set('display_errors', 0);
 							Course Databank
 						</p>
                                                 <div style="margin-top:-2.2%;float:right">
- 
+                                                    <form action="" method="post">
 											 
-                                                    <button class="btn btn-success">Sync to Online Portal<i class="fa fa-cloud-upload"></i></button>
-                                                 
-                                                 <button  data-target="#mount" data-toggle="modal" class="btn bgm-pink waves-effect">Mount Course<i class="fa fa-tasks"></i></button>
-                                                 <button   class="btn btn-primary waves-effect waves-button dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bars"></i> Export Data</button>
+                                                        <button type="submit" style="margin-left: -235px;"name="sync" class="btn btn-success">Sync to Online Portal<i class="fa fa-cloud-upload"></i></button>
+                                                    </form>
+                                                    <button  data-target="#mount"style="margin-top: -59px" data-toggle="modal" class="btn bgm-pink waves-effect">Mount Course<i class="fa fa-tasks"></i></button>
+                                                 <button   class="btn btn-primary  waves-effect waves-button dropdown-toggle" style="margin-top: -59px" data-toggle="dropdown"><i class="fa fa-bars"></i> Export Data</button>
                                                         <ul class="dropdown-menu">
                                             
                                                             <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'csv',escape:'false'});"><img src='assets/icons/csv.png' width="24"/> CSV</a></li>
@@ -382,7 +431,7 @@ ini_set('display_errors', 0);
 
 
                                             $query="SELECT  * FROM tpoly_mounted_courses  WHERE 1  $term_ $level_ $program_ $course_   ORDER BY COURSE_NAME ASC ";
-                                             
+                                            $_SESSION[last_query]=$query; 
                                                 $page=new classes\OS_Pagination($query, $query) ;
                                                 $stmt= $page->paginate() ;
                                             if($stmt->RecordCount()>0){
