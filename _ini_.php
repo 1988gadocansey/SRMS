@@ -122,6 +122,8 @@ if( ! ini_get('date.timezone') )
 	define('BASEPATH', str_replace("\\", "/", $system_path));
 
                 
-
+if (($loader = require_once __DIR__ . '/vendor/autoload.php') == null)  {
+  die('Vendor directory not found, Please run composer install.');
+}
                 
                 
