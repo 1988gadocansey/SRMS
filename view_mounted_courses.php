@@ -438,7 +438,7 @@ ini_set('display_errors', 0);
                                          ?>
                            
                     <div class="table-responsive">
-                        <table   id="data-table-command" class="table table-bordered table-vmiddle"  >
+                        <table   id="data-table-command" class="table table-striped table-vmiddle"  >
                             <thead>
                                 <tr>
                                     
@@ -474,7 +474,7 @@ ini_set('display_errors', 0);
                                     <tr>
                                     
                                      <td><?php echo $count ?></td>
-                                     <td style="text-align:left;text-transform: capitalize"><?php echo $rtmt[COURSE_NAME] ?></td>
+                                     <td style="text-align:left;text-transform: capitalize"><?php echo $help->getCourse( $rtmt[COURSE_CODE] )?></td>
                                     <td ><?php  echo $rtmt[COURSE_CODE] ; ?></td>
                                   <td style="text-transform: capitalize"><?php echo strtoupper($help->getProgram($rtmt[PROGRAMME])); ?></td> 
                                     <td style="text-align: center"><?php echo $rtmt["COURSE_CREDIT"] ?></td>

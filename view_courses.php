@@ -58,7 +58,7 @@ ini_set('display_errors', 0);
                                 <div class="modal-dialog modal-lg">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h4 class="modal-title">Add Programs</h4>
+                                            <h4 class="modal-title">Add Course</h4>
                                         </div>
                                         <div class="modal-body">
                                <form action="program.php?add=1" method="POST" class="form-horizontal" role="form">
@@ -259,7 +259,7 @@ ini_set('display_errors', 0);
                                          ?>
                            
                     <div class="table-responsive">
-                        <table   id="data-table-command" class="table table-bordered table-vmiddle"  >
+                        <table   id="data-table-command" class="table table-striped table-vmiddle"  >
                             <thead>
                                 <tr>
                                     

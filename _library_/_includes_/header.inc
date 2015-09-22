@@ -12,7 +12,7 @@
 <meta content="" name="Takoradi Polytechnic"/>
  
 <!-- BEGIN GLOBAL MANDATORY STYLES -->
-<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+ 
 <link href="assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link href="assets/global/plugins/font-awesome/css/material-design-iconic-font.mine7ea.css" rel="stylesheet" type="text/css">
 <link href="assets/global/plugins/font-awesome/css/materialadminb0e2.css" rel="stylesheet" type="text/css">
