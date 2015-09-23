@@ -8,38 +8,36 @@ ini_set('display_errors', 0);
     $help=new _classes_\helpers();
     $notify=new _classes_\Notifications();
     $security=new _classes_\cryptCls();
-    
     if($_GET[program]){
         $_SESSION[program]=$_GET[program];
         }
 
-        if($_GET[course]){
-        $_SESSION[course]=$_GET[course];
-        }
-        
-        if($_POST[go]){
-        $_SESSION[search]=$_POST[search];
-        $_SESSION[content]=$_POST[content];
+        if($_GET[duration]){
+        $_SESSION[duration]=$_GET[duration];
         }
 
-        if($_GET[year]){
-        $_SESSION[year]=$_GET[year];
+        if($_GET[credit]){
+        $_SESSION[credit]=$_GET[credit];
         }
-        if($_GET[status]){
-        $_SESSION[status]=$_GET[status];
+
+        if($_GET[department]){
+        $_SESSION[department]=$_GET[department];
         }
-        if($_GET[nation]){
-        $_SESSION[nation]=$_GET[nation];
-        }
-        if($_GET[gender]){
-        $_SESSION[gender]=$_GET[gender];
-        }
-        if($_GET[level]){
-        $_SESSION[levels]=$_GET[level];
-        }
+         
 
         // mount course
-        
+         if (isset($_POST['go'])){
+              
+             $course=$help->getCourse($_POST[course]);
+             $type=$help->getCourseType($_POST[course]);
+             $year=$notify->getyear();
+             print_r($query=$sql->Prepare("INSERT INTO tpoly_programme SET  COURSE_NAME=".$sql->Param('a').", COURSE_CODE=".$sql->Param('b')."  , COURSE_CREDIT=".$sql->Param('c').", COURSE_SEMESTER=".$sql->Param('d').",COURSE_LEVEL=".$sql->Param('e').",COURSE_TYPE=".$sql->Param('f').",PROGRAMME=".$sql->Param('g')." ,LECTURER=".$sql->Param('h').",COURSE_YEAR=".$sql->Param('i').""));
+
+           if( $query=$sql->Execute( $query,array($course,$_POST[course] ,$_POST[credit],$_POST[term],$_POST[level],$type,$_POST[program],$_POST[lecturer],$_POST[year]))){
+              
+              header("location:view_mounted_courses?success");
+              }
+         }
          if(isset($_POST[sync])){
              if($help->ping("www.google.com",80,20)){
              $string=$sql->Prepare($_SESSION[last_query]);
@@ -106,7 +104,7 @@ ini_set('display_errors', 0);
                                 <div class="modal-dialog modal-lg">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h4 class="modal-title">Course Mounting</h4>
+                                            <h4 class="modal-title">Add User</h4>
                                         </div>
                                         <div class="modal-body">
                                             
@@ -287,39 +285,40 @@ ini_set('display_errors', 0);
 				<div class="col-md-12">
 					<div class="note note-success note-bordered">
 						<p>
-							Students
+							User Accounts
 						</p>
                                                 <div style="margin-top:-2.2%;float:right">
-                                                    <form action="" method="post">
-											 
-                                                        <button type="submit" style="margin-left: -235px;"name="sync" class="btn btn-success">Sync to Online Portal<i class="fa fa-cloud-upload"></i></button>
-                                                    </form>
-                                                    <button  style="margin-top: -59px"   class="btn bgm-pink waves-effect">Send SMS<i class="fa fa-mobile-phone"></i></button>
-                                                 <button   class="btn btn-primary  waves-effect waves-button dropdown-toggle" style="margin-top: -59px" data-toggle="dropdown"><i class="fa fa-bars"></i> Export Data</button>
+                                                    <button  data-target="#mount" data-toggle="modal" class="btn bgm-pink waves-effect">
+											Add New User <i class="fa fa-plus"></i>
+											</button>
+                                                    <button class="btn btn-success">Sync to Online Portal<i class="fa fa-cloud-upload"></i></button>
+                                                
+                                                 
+                                                 <button   class="btn btn-primary waves-effect waves-button dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bars"></i> Export Data</button>
                                                         <ul class="dropdown-menu">
                                             
                                                             <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'csv',escape:'false'});"><img src='assets/icons/csv.png' width="24"/> CSV</a></li>
-                                                <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'txt',escape:'false'});"><img src='assets/icons/txt.png' width="24"/> TXT</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'excel',escape:'false'});"><img src='assets/icons/xls.png' width="24"/> XLS</a></li>
-                                                <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'doc',escape:'false'});"><img src='assets/icons/word.png' width="24"/> Word</a></li>
-                                                <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'powerpoint',escape:'false'});"><img src='assets/icons/ppt.png' width="24"/> PowerPoint</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'png',escape:'false'});"><img src='assets/icons/png.png' width="24"/> PNG</a></li>
-                                                <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'pdf',escape:'false'});"><img src='assets/icons/pdf.png' width="24"/> PDF</a></li>
-                                              </ul>
-                                              </div>
+                                                            <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'txt',escape:'false'});"><img src='assets/icons/txt.png' width="24"/> TXT</a></li>
+                                                            <li class="divider"></li>
+                                                            <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'excel',escape:'false'});"><img src='assets/icons/xls.png' width="24"/> XLS</a></li>
+                                                            <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'doc',escape:'false'});"><img src='assets/icons/word.png' width="24"/> Word</a></li>
+                                                            <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'powerpoint',escape:'false'});"><img src='assets/icons/ppt.png' width="24"/> PowerPoint</a></li>
+                                                            <li class="divider"></li>
+                                                            <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'png',escape:'false'});"><img src='assets/icons/png.png' width="24"/> PNG</a></li>
+                                                            <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'pdf',escape:'false'});"><img src='assets/icons/pdf.png' width="24"/> PDF</a></li>
+                                                          </ul>
+                                                          </div>
                             
 					</div>
                                     <div>
                                         
                                   <table  width=" " border="0">
                     <tr>
-                     
+                    <form action="" method="post">
                      
                 	    <td width="20%">
 
-                                    <select class='form-control select2_sample1'  name='subject'  style="margin-left:-45%; width:137% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?program='+escape(this.value);" >
+                                    <select class='form-control'  name='subject'  style="margin-left:-38%; width:167% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?program='+escape(this.value);" >
                                 <option value=''>Filter by programme</option>
                                         <option value='All programs'>All Programs</option>
                                     <?php 
@@ -341,118 +340,93 @@ ini_set('display_errors', 0);
                                       </select>
 
                             </td>
+                             <td>&nbsp;</td>
                              
-				 
+				 <td width="25%">
+                        <select class='form-control'  name='subject'  style="margin-left:22%; width:140% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?department='+escape(this.value);" >
+                      <option value=''>Filter by department</option>
+                              <option value='All department'>All Departments</option>
+                                    <?php 
+                                      global $sql;
+
+                                          $query2=$sql->Prepare("SELECT * FROM tpoly_department ");
+
+
+                                          $query=$sql->Execute( $query2);
+
+
+                                       while( $row = $query->FetchRow())
+                                         {
+
+                                         ?>
+                                         <option <?php if($_SESSION[department]==$row['DEPTCODE']){echo 'selected="selected"'; }?> value="<?php echo $row['DEPTCODE']; ?>"        ><?php echo $row['DEPARTMENT']; ?></option>
+
+                                  <?php }?>
+                            </select>
+      
+                        </td>
                       <td>&nbsp;</td>
                                 <td width="25%">
-                                    <select class='form-control'  name='term'  style="margin-left:-1%;  width:26% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?level='+escape(this.value);" >
-                                         <option value=''>Filter by level</option>
-                                        <option value='All level'>All Levels</option>
-                                        <option value='50'<?php if($_SESSION[levels]=='50'){echo 'selected="selected"'; }?>>50</option>
-                                            <option value='100'<?php if($_SESSION[levels]=='100'){echo 'selected="selected"'; }?>>100</option>
-                                            <option value='200'<?php if($_SESSION[levels]=='200'){echo 'selected="selected"'; }?>>200</option>
-                                        <option value='300'<?php if($_SESSION[levels]=='300'){echo 'selected="selected"'; }?>>300</option>
-                                        <option value='400'<?php if($_SESSION[levels]=='400'){echo 'selected="selected"'; }?>>400</option>
+                                    <select class='form-control'  name='term'  style="margin-left:62%;  width:58% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?duration='+escape(this.value);" >
+                                         <option value=''>Filter by duration</option>
+                                        <option value='All duration'>All duration</option>
+                                        <?php 
+                                            global $sql;
 
+                                                $query2=$sql->Prepare("SELECT DISTINCT DURATION FROM tpoly_programme ");
+
+
+                                                $query=$sql->Execute( $query2);
+
+
+                                             while( $row = $query->FetchRow())
+                                               {
+
+                                               ?>
+                                               <option <?php if($_SESSION[duration]==$row['DURATION']){echo 'selected="selected"'; }?> value="<?php echo $row['DURATION']; ?>"        ><?php echo $row['DURATION']; ?></option>
+
+                                        <?php }?>
                                     </select>
 
                             </td>
-                    <td width="25%">
-                                   <select class='form-control' style="margin-left:-73%;  width:72% "  onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?nation='+escape(this.value);"     >
-                                       <option value=''>Filter by Nationalities</option>
-                                        <option value='All nation'>All Nationalities</option>
-                                                          
-                                                      <?php 
-                                                      global $sql;
-
-                                                      $query2=$sql->Prepare("SELECT * FROM tbl_country");
-
-
-                                                        $query=$sql->Execute( $query2);
-
-
-                                                     while( $row = $query->FetchRow())
-                                                       {
-
-                                                       ?>
-                                                       <option value="<?php echo $row['Name']; ?>"   <?php if($rows->NATIONALITY==$row['Name']){echo "selected='selected'";} ?>      ><?php echo $row['Name']; ?></option>
-
-                                                    <?php }?>
-                                                       
-                                                   </select>
-
-                            </td>     
+                             
                     <td>&nbsp;</td>
-                      <td width="20%">
+                         <td width="25%">
+                                    <select class='form-control'     style="margin-left:29%;  width:106% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?credit='+escape(this.value);" >
+                                         <option value=''>Filter by minimum credit hours</option>
+                                        <option value='All credit'>All credits</option>
+                                        <?php 
+                                            global $sql;
 
-                        <select class='form-control'  name='term'  style="margin-left:-126%;  width:66% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?year='+escape(this.value);" >
-                                         <option value=''>Filter by year group</option>
-                                          <option value='All year'>All year groups</option>
-                                                  <?php
-                                                                                                               for($i=2008; $i<=4000; $i++){
-                                                                                                                       $a=$i - 1 ."/". $i;?>
-                                                                                                                                <option <?php if($_SESSION[year]==$a){echo 'selected="selected"'; }?>value='<?php echo $a ?>'><?php echo $a ?></option>";
-
-                                                                                                                    <?php    } ?>
+                                                $query2=$sql->Prepare("SELECT DISTINCT MINCREDITS FROM tpoly_programme ");
 
 
-                                                                                                        ?>
+                                                $query=$sql->Execute( $query2);
+
+
+                                             while( $row = $query->FetchRow())
+                                               {
+
+                                               ?>
+                                               <option <?php if($_SESSION[credit]==$row['MINCREDITS']){echo 'selected="selected"'; }?> value="<?php echo $row['MINCREDITS']; ?>"        ><?php echo $row['MINCREDITS']; ?></option>
+
+                                        <?php }?>
                                     </select>
 
-                     </td>
-                     <td>&nbsp;</td>
-                                <td width="25%">
-                                    <select class='form-control'  name='term'  style="margin-left:-316%;  width:139% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?status='+escape(this.value);" >
-                                         <option value=''>Filter by status</option>
-                                        <option value='All status'>All status</option>
-                                        <option value='1'<?php if($_SESSION[status]=='1'){echo 'selected="selected"'; }?>>Alumni</option>
-                                        <option value='2'<?php if($_SESSION[status]=='2'){echo 'selected="selected"'; }?>>Deffered</option>
-                                        <option value='3'<?php if($_SESSION[status]=='3'){echo 'selected="selected"'; }?>>Dead</option>
-                                        <option value='4'<?php if($_SESSION[status]=='4'){echo 'selected="selected"'; }?>>Suspended</option>
-                                        <option value='5'<?php if($_SESSION[status]=='5'){echo 'selected="selected"'; }?>>Rasticated</option>
-
-                                    </select>
-
-                     </td>
-                      <td>&nbsp;</td>
-                      <td width="25%">
-                           <select class='form-control'  name='term'   style="margin-left:-1001%;  width:478% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?gender='+escape(this.value);" >
-                                         <option value=''>Filter by gender</option>
-                                        <option value='All gender'>All gender</option>
-                                        <option value='M'<?php if($_SESSION[gender]=='M'){echo 'selected="selected"'; }?>>Male</option>
-                                        <option value='F'<?php if($_SESSION[gender]=='F'){echo 'selected="selected"'; }?>>Female</option>
-                                         
-                                    </select>
-
-                      </td>
-                      <td>&nbsp;</td>
-                  <form action="students.php" method="post" >
-                      <td width="25%">
-                          
-                                                         
-                          <input type="text" name ="search" placeholder="search here"required="" style="margin-left:-585%;  width:618% " class="form-control" id=" "  >
-                                                             
-                      </td>
-                      <td>&nbsp;</td>
-                       <td width="25%">
-                           <select class='form-control'  name='content' required="" style="margin-left:-56%;  width:478% "  >
-                                         <option value=''>search by</option>
-                                        
-                                        <option value='SURNAME'<?php if($_SESSION[content]=='SURNAME'){echo 'selected="selected"'; }?>>Surname</option>
-                                        <option value='FIRSTNAME'<?php if($_SESSION[status]=='FIRSTNAME'){echo 'selected="selected"'; }?>>First Name</option>
-                                        <option value='INDEXNO'<?php if($_SESSION[status]=='INDEXNO'){echo 'selected="selected"'; }?>>Index No</option>
-                                        <option value='PROGRAMMECODE'<?php if($_SESSION[status]=='PROGRAMMECODE'){echo 'selected="selected"'; }?>>Program</option>
-                                        <option value='LEVEL'<?php if($_SESSION[status]=='LEVEL'){echo 'selected="selected"'; }?>>Level</option>
-
-                                    </select>
-
-                      </td>
-                      <td>&nbsp;</td>
-                      <td width="25%">
-                            <button type="submit" name="go" style="margin-left:105%;width: 81px " class="btn btn-primary">Go</button>
-                      </td>
-                    </tr>  
+                            </td>
+                    <td>&nbsp;</td>
                     
+                      
+        
+                    <td>
+
+                       <!-- <div class="form-action ">
+                                <button type="submit" name="submit" class="btn ink-reaction btn-raised btn-primary">Search</button>
+
+                        </div> -->
+                    </td>
+        
+                    </tr>  
                 </form>
                 </table>
                                     </div>
@@ -465,110 +439,70 @@ ini_set('display_errors', 0);
 						</div>
 			<div class="portlet-body">
                                             <?php 
-                                                $program=$_SESSION[program];                                       
-                                                $course=$_SESSION[course];
-                                                $gender=$_SESSION[gender];
-                                                $level=$_SESSION[levels];
-                                                $year=$_SESSION[year];
-                                                $nation=$_SESSION[nation];
-                                                $status=$_SESSION[status];
-                                                $search=$_POST[search];
-                                                $content=$_POST[content];
+                                            $program=$_SESSION[program];                                       
+                                            $duration=$_SESSION[duration];
+                                            $credit=$_SESSION[credit];
+                                            $department=$_SESSION[department];
                                             
-
-                                                if($level=="All level" or $level==""){ $level=""; }else {$level_=" and  LEVEL = '$level' "  ;}
-                                                if($program=="All programs" or $program==""){ $program=""; }else {$program_="and PROGRAMMECODE = '$program' "  ;}
-                                                if($gender=="All gender" or $gender=="" ){ $gender=""; }else {$gender_=" and SEX = '$gender' "  ;}
-                                                if($year=="All year" or $year=="" ){ $year=""; }else {$year_=" and GRADUATING_GROUP = '$year' "  ;}
-                                                if($nation=="All nation" or $nation=="" ){ $nation=""; }else {$nation_=" and COUNTRY = '$nation' "  ;}
-                                                if($status=="All status" or $status=="" ){ $status=""; }else {$status_=" and STATUS = '$status' "  ;}
-                                                if($search=="" ){ $search=""; }else {$search_="AND $content LIKE '$search' "  ;}
+                                            if($department=="All department" or $department==""){ $department=""; }else {$department_=" and DEPTCODE = '$department' "  ;}
+                                            if($credit=="All credit" or $credit==""){ $credit=""; }else {$credit_=" and MINCREDITS = '$credit' "  ;}
+                                            if($duration=="All duration" or $duration==""){ $duration=""; }else {$duration_=" and DURATION = '$duration' "  ;}
+                                            if($program=="All programs" or $program==""){ $program=""; }else {$program_=" and PROGRAMMECODE = '$program' "  ;}
 
 
-                                                 $query="SELECT  * FROM tpoly_students   where 1 $program_  $level_  $search_ $gender_ $nation_ $status_ $year_" ;
-                                               $_SESSION[last_query]=$query; 
+                                            $query="SELECT  * FROM tpoly_programme  WHERE 1  $department_ $credit_ $program_ $duration_   ORDER BY  PROGRAMME ASC ";
+                                           $_SESSION[last_query]=$query; 
 
                                                  $rs = $sql->PageExecute($query,RECORDS_BY_PAGE,CURRENT_PAGE);
                                                  $recordsFound = $rs->_maxRecordCount;    // total record found
                                                 if (!$rs->EOF) 
-                                     {
+                                                {
                                              ?>
                            
-                    <div class="table-responsive">
-                        <table  id="data-table-command" class="table table-striped table-vmiddle"  >
-                            <thead>
-                                <tr>
-                                    
-                                     <th>NO</th>
-                                     <th style="text-align: center">PIC</th>
-                                     <th >INDEX</th>
-                                      <th>NAME</th> 
-                                      <th>PROGRAM</th>
-                                   
-                                      <th>LEVEL</th>
-                                      <th>GENDER</th>
-                                      <th>AGE</th>
-                                      <th>PHONE</th>
-                                     
-                                      <th>NATIONALITY</th>
-                                      <th>YEAR GROUP</th>
-                                      <th>STATUS</th>
-                                       <th>BILL</th>
-                                      <th>CGPA</th>
-                                       <th>ACTION</th>
-                                      
-                                </tr>
-                            </thead>
-                            <p align="center"style="color:red">  <?php echo $recordsFound ?> Records </p>
-                            <tbody>
-                                <?php
-                                
-                                   $count=0;
-                                    while($rtmt=$rs->FetchRow()){
-                                                            $count++;
-                                                         
-                                                         
-                                       ?>
-                                    <tr>
-                                    
-                                     <td><?php echo $count ?></td>
-                                     <td><a href="addStudent.php?indexno=<?php echo $rtmt[INDEXNO] ?>"><img <?php $help->picture("photos/students/$rtmt[INDEXNO].JPG",250)  ?> style="width:80px;height: 70px"   src="<?php echo file_exists("photos/students/$rtmt[INDEXNO].JPG") ? "photos/students/$rtmt[INDEXNO].JPG":"photos/students/user.jpg";?>" alt=" Picture of Student Here"    /></a></td>
-                                     <td style="text-align:left;text-transform: capitalize"><?php echo $rtmt[INDEXNO] ?></td>
-                                    <td ><?php  echo $rtmt[SURNAME].", ".$rtmt[FIRSTNAME]." ".$rtmt[OTHERNAMES] ; ?></td>
-                                    <td ><?php  echo $help->getProgram($rtmt[PROGRAMMECODE]) ; ?></td>
-                                    <td  ><?php echo $rtmt[LEVEL]; ?></td> 
-                                    <td style="text-align: center"><?php echo $rtmt["SEX"] ?></td>
-                                    <td style="text-align: center"><?php echo $rtmt[AGE] ?></td>
-                                    <td style="text-align: center"><?php echo $rtmt["TELEPHONENO"] ?></td>
-                                    <td style="text-align: "><?php echo $rtmt["COUNTRY"] ?></td>
-                                    <td style="text-align:  "><?php echo   $rtmt["GRADUATING_GROUP"] ?></td>
-                                    <td style="text-align:  "><?php echo $rtmt[STATUS]?></td>
-                                      
-                                     <td style="text-align:  "><?php echo $rtmt["0"] ?></td>
-                                      <td style="text-align:  "><?php echo $rtmt["CGPA"] ?></td>
-                                      <td style="text-align:left;width:  "><i class="md md-print" title="Print transcript"></i></td>
-                                    </tr>
-                                    <?php }?>
-                                     
-                            </tbody>
-                          </table>  
-                    <br/>
-                     <center><?php
-                         $GenericEasyPagination->setTotalRecords($recordsFound);
-	  
-                        echo $GenericEasyPagination->getNavigation();
-                        echo "<br>";
-                        echo $GenericEasyPagination->getCurrentPages();
-                      ?></center>
+                            <div class="table-responsive">
+                                <div ng-app="myApp" ng-controller="customersCtrl"> 
 
-          </div>
-                                    <?php }else{
-                  echo "<div class='alert alert-danger alert-dismissible' role='alert'>
-                                <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
-                                Oh snap! Something went wrong. No record to display! Please 
-                            </div>";
-             }?>
-						</div>
+                                        <table  id="data-table-command" class="table table-striped table-hover">
+                                        <tr>
+                                            <thead>
+                                             
+                                            <th style="text-align:">WORKER</th>
+                                            <th>ROLE</th>
+                                            <th>USER SINCE</th>
+                                            <th>IP ASSIGNED</th>
+                                            <th>LAST LOGIN</th>
+                                            <th>ACCOUNT STATUS</th>
+                                            </thead>
+                                        </tr>
+                                      <tr ng-repeat="x in names">
+                                        <td>{{x.user}}</td>
+                                          <td>{{x.type}}</td>
+                                        <td style="text-align:">{{x.since}}</td>
+                                         <td>{{x.ip}}</td>
+                                         <td>{{x.last_login}}</td>
+                                         <td>{{x.active}}</td>
+                                      </tr>
+                                    </table>
+
+                                    </div>
+         
+                                <br/>
+                             <center><?php
+                                 $GenericEasyPagination->setTotalRecords($recordsFound);
+
+                                echo $GenericEasyPagination->getNavigation();
+                                echo "<br>";
+                                echo $GenericEasyPagination->getCurrentPages();
+                              ?></center>
+                    </div>
+                                            <?php }else{
+                          echo "<div class='alert alert-danger alert-dismissible' role='alert'>
+                                        <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+                                        Oh snap! Something went wrong. No record to display! Please 
+                                    </div>";
+                     }?>
+                                                       
+                        </div>
 					 
 					<!-- END EXAMPLE TABLE PORTLET-->
 
@@ -592,15 +526,20 @@ ini_set('display_errors', 0);
 <div class="scroll-to-top">
 	<i class="icon-arrow-up"></i>
 </div>
+<script src= "assets/ajax.googleapis.com_ajax_libs_angularjs_1.3.14_angular.min.js"></script>
 <?php include("_library_/_includes_/scripts.php");  ?>
-<script type="text/javascript" src="assets/global/plugins/select2/select2.min.js"></script>
 
 <script>
 jQuery(document).ready(function() {       
    Metronic.init(); // init metronic core components
 Layout.init(); // init current layout
 Demo.init(); // init demo features
-   
+    
+});
+var app = angular.module('myApp', []);
+app.controller('customersCtrl', function($scope, $http) {
+   $http.get("user_json.php")
+   .success(function (response) {$scope.names = response.records;});
 });
 </script>
 <?php include("_library_/_includes_/export.php");  ?>

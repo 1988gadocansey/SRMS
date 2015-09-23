@@ -135,7 +135,7 @@ class Notifications {
      public function Message(){
          
          if(isset($_GET['success'])){
-             echo "<div class='alert alert-success'>
+             echo "<div class='alert alert-success' style='width:426%;margin-left:-29%'>
                 <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
                 <strong>Notification!</strong>   Action completed successfully.
          </div>";}
@@ -145,7 +145,7 @@ class Notifications {
                 <strong>Notification!</strong>   Semester openned successfully.
          </div>";}
          elseif(isset($_GET['no_internet'])){
-             echo "<div class='alert alert-warning'>
+             echo "<div class='alert alert-warning' style='width:426%;margin-left:-29%'>
                 <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
                 <strong>Notification!</strong>   Please check your internet connection.
          </div>";}
@@ -156,7 +156,7 @@ class Notifications {
          </div>";}
          
         else if(isset($_GET['error'])){
-             echo "<div class='alert alert-warning'>
+             echo "<div class='alert alert-warning' style='width:317%;margin-left:-22%'>
                 <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
                 <strong>Warning!</strong> Action failed.  Action couldn't complete well try again .
          </div>";}

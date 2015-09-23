@@ -165,10 +165,16 @@ public function getCourseType($code){
     return $a->COURSE_TYPE;
 }
 public function getYear($code){
-    $query=$this->connect->Prepare("SELECT COURSE_TYPE FROM tpoly_courses WHERE COURSE_CODE='$code'");
+    $query=$this->connect->Prepare("SELECT * FROM tpoly_year");
     $output= $this->connect->Execute($query);
      $a=$output->FetchNextObject() ;
-    return $a->COURSE_TYPE;
+    return $a->YEAR.$a->TERM;
+}
+public function getdepartment($code){
+    $query=$this->connect->Prepare("SELECT DEPARTMENT FROM tpoly_department WHERE DEPTCODE='$code'");
+    $output= $this->connect->Execute($query);
+     $a=$output->FetchNextObject() ;
+    return $a->DEPARTMENT;
 }
 public function getApplicationMode($mode){
      $query=   $this->connect->Prepare("SELECT * FROM tbl_mode_application WHERE ID='$mode'");
@@ -244,6 +250,17 @@ public function finalize($applicant){
 	}
 public function copyright(){
     return "&copy ".date("Y")." | Takoradi Polytechnic - All rights reserved";
+}
+public function getindexno(){
+    $query=$this->connect->Prepare("SELECT no FROM tpoly_indexno");
+    $query2=$this->connect->Execute($query);
+    $data=$query2->FetchNextObject();
+    return $data->NO;
+}
+public function UpdateIndexno(){
+    $query=$this->connect->Prepare("UPDATE tpoly_indexno SET no=no + 1");
+    $query2=  $this->connect->Execute($query);
+    
 }
 
 }
