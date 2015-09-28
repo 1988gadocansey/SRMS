@@ -4,7 +4,7 @@ ini_set('display_errors', 0);
     require '_ini_.php';
     require '_library_/_includes_/config.php';
     require '_library_/_includes_/app_config.inc';
-    $url="http://www.tpolyonline.com/Portal/sync_from_local.php";
+    
     $help=new _classes_\helpers();
     $notify=new _classes_\Notifications();
     $security=new _classes_\cryptCls();
@@ -26,6 +26,17 @@ ini_set('display_errors', 0);
         if($_GET[level]){
         $_SESSION[levels]=$_GET[level];
         }
+//////////////////////////////////////
+if (isset($_GET[delete])) {
+
+            $query = $sql->Prepare("DELETE FROM tpoly_mounted_courses WHERE ID='$_GET[delete]'");
+            if ($sql->Execute($query)) {
+                header("location:view_mounted_courses?success=1");
+            } else {
+                header("location:view_mounted_courses?error=1");
+            }
+        }
+////////////////////////////////////
 
         // mount course
          if (isset($_POST['go'])){
@@ -58,6 +69,8 @@ ini_set('display_errors', 0);
 	
                    $query=$sql->Prepare("UPDATE tpoly_mounted_courses SET SYNC='1'  where ID='$row[ID]'");
                     if($sql->Execute($query)){
+                        // then clear query
+                        $_SESSION[query]="";
                         header("location:view_mounted_courses?success");
                     }
                        
@@ -87,7 +100,7 @@ ini_set('display_errors', 0);
 		<div class="container">
 			<!-- BEGIN PAGE TITLE -->
 			<div class="page-title">
-				  <?php $notify->Message();  ?>
+				 
 			</div>
 			<!-- END PAGE TITLE -->
 			<!-- BEGIN PAGE TOOLBAR -->
@@ -285,9 +298,10 @@ ini_set('display_errors', 0);
 			<!-- BEGIN PAGE CONTENT INNER -->
 			<div class="row">
 				<div class="col-md-12">
+                                      <div><?php $notify->Message(); ?></div>
 					<div class="note note-success note-bordered">
 						<p>
-							Course Databank
+							Mounted Courses
 						</p>
                                                 <div style="margin-top:-2.2%;float:right">
                                                     <form action="" method="post">
@@ -344,7 +358,7 @@ ini_set('display_errors', 0);
                              <td>&nbsp;</td>
                              
 				 <td width="25%">
-                        <select class='form-control'  name='subject'  style="margin-left:57%; width:140% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?course='+escape(this.value);" >
+                        <select class='form-control'  name='subject'  style="margin-left:28%; width:140% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?course='+escape(this.value);" >
                       <option value=''>Filter Courses</option>
                               <option value='All Courses'>All Courses</option>
                           <?php 
@@ -368,7 +382,7 @@ ini_set('display_errors', 0);
                         </td>
                       <td>&nbsp;</td>
                                 <td width="25%">
-                                    <select class='form-control'  name='term'  style="margin-left:92%;  width:58% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?level='+escape(this.value);" >
+                                    <select class='form-control'  name='term'  style="margin-left:73%;  width:58% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?level='+escape(this.value);" >
                                          <option value=''>Filter by level</option>
                                         <option value='All level'>All Levels</option>
                                         <option value='50'<?php if($_SESSION[levels]=='50'){echo 'selected="selected"'; }?>>50</option>
@@ -384,7 +398,7 @@ ini_set('display_errors', 0);
                     <td>&nbsp;</td>
                       <td width="20%">
 
-                        <select class='form-control'  name='term'  style="margin-left:92%;  width:58% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?term='+escape(this.value);" >
+                        <select class='form-control'  name='term'  style="margin-left:40%;  width:58% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?term='+escape(this.value);" >
                                          <option value=''>Filter by semester</option>
                                         <option value='All terms'>All semesters</option>
                                             <option value='1'<?php if($_SESSION[term]=='1'){echo 'selected="selected"'; }?>>1st</option>
@@ -396,18 +410,25 @@ ini_set('display_errors', 0);
                      </td>
                     <td>&nbsp;</td>
                     
-                      
-        
-                    <td>
+                      <td width="20%">
 
-                       <!-- <div class="form-action ">
-                                <button type="submit" name="submit" class="btn ink-reaction btn-raised btn-primary">Search</button>
+                        <select class='form-control'  name='term'  style="margin-left:2%;  width:172% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?year='+escape(this.value);" >
+                                         <option value=''>Filter by academic year</option>
+                                          <option value='All year'>All years</option>
+                                                  <?php
+                                                                                                               for($i=2008; $i<=4000; $i++){
+                                                                                                                       $a=$i - 1 ."/". $i;?>
+                                                                                                                                <option <?php if($_SESSION[year]==$a){echo 'selected="selected"'; }?>value='<?php echo $a ?>'><?php echo $a ?></option>";
 
-                        </div> -->
-                    </td>
-        
+                                                                                                                    <?php    } ?>
+
+
+                                                                                                        ?>
+                                    </select>
+
+                     </td>
                     </tr>  
-                </form>
+                
                 </table>
                                     </div>
                                     <!-- BEGIN EXAMPLE TABLE PORTLET-->
@@ -423,19 +444,23 @@ ini_set('display_errors', 0);
                                             $course=$_SESSION[course];
                                             $term=$_SESSION[term];
                                             $level=$_SESSION[levels];
+                                             $year=$_SESSION[year];
                                             
                                             if($term=="All terms" or $term==""){ $term=""; }else {$term_=" and COURSE_SEMESTER = '$term' "  ;}
                                             if($level=="All level" or $level==""){ $level=""; }else {$level_=" and COURSE_LEVEL = '$level' "  ;}
                                             if($program=="All programs" or $program==""){ $program=""; }else {$program_=" and PROGRAMME = '$program' "  ;}
                                             if($course=="All Courses" or $course=="" ){ $course=""; }else {$course_=" and COURSE_CODE = '$course' "  ;}
+                                             if($year=="All year" or $year=="" ){ $year=""; }else {$year_=" and COURSE_YEAR = '$year' "  ;}
 
 
-                                            $query="SELECT  * FROM tpoly_mounted_courses  WHERE 1  $term_ $level_ $program_ $course_   ORDER BY COURSE_NAME ASC ";
+                                            $query="SELECT  * FROM tpoly_mounted_courses  WHERE 1  $term_ $level_ $program_ $course_ $year_   ORDER BY COURSE_NAME ASC ";
                                             $_SESSION[last_query]=$query; 
-                                                $page=new classes\OS_Pagination($query, $query) ;
-                                                $stmt= $page->paginate() ;
-                                            if($stmt->RecordCount()>0){
-                                         ?>
+                                                
+                                                 $rs = $sql->PageExecute($query,RECORDS_BY_PAGE,CURRENT_PAGE);
+                                                 $recordsFound = $rs->_maxRecordCount;    // total record found
+                                                if (!$rs->EOF) 
+                                     {
+                                             ?>
                            
                     <div class="table-responsive">
                         <table   id="data-table-command" class="table table-striped table-vmiddle"  >
@@ -450,18 +475,18 @@ ini_set('display_errors', 0);
                                    
                                     <th data-column-id="Level" data-order="asc" style="text-align:center">LEVEL</th>
                                     <th data-column-id="Semester" style="text-align:center">SEMESTER</th>
-                                     <th data-column-id="Type">TYPE</th>
+                                     <th data-column-id="Type" style="text-align: ">YEAR</th>
                                      
-                                     <th data-column-id=" " data-order="" style="text-align: center" colspan="2">ACTIONS</th>
+                                     <th data-column-id=" " data-order="" style="text-align: center" colspan="4">ACTIONS</th>
                                       
                                 </tr>
                             </thead>
-                            <p align="center"style="color:red">  <?php echo $stmt->RecordCount() ?> Records </p>
+                            <p align="center"style="color:red">  <?php echo $recordsFound ?> Records </p>
                             <tbody>
                                 <?php
                                 
                                    $count=0;
-                                    while($rtmt=$stmt->FetchRow()){
+                                    while($rtmt=$rs->FetchRow()){
                                                             $count++;
                                                         if($rtmt["COURSE_SEMESTER"]==1){
                                                             $sem="1st"; 
@@ -480,19 +505,28 @@ ini_set('display_errors', 0);
                                     <td style="text-align: center"><?php echo $rtmt["COURSE_CREDIT"] ?></td>
                                     <td style="text-align: center"><?php echo $rtmt["COURSE_LEVEL"] ?></td>
                                     <td style="text-align: center"><?php echo strtoupper($sem) ?></td>
-                                    <td style="text-align: center"><?php echo strtoupper( $rtmt["COURSE_TYPE"]) ?></td>
+                                    <td style="text-align:  "><?php echo strtoupper( $rtmt["COURSE_YEAR"]) ?></td>
                                      
-                                    <td><a href=""><i style="color: green" class=" md-mode-edit">Edit</i></a></td>
-                                    <td><a href=""><i style="color: red" class="md md-clear">Delete</i></a> </td>
+                                     
+                                    <td><a href="view_mounted_courses?delete=<?php  echo $rtmt[ID] ; ?>" onclick="return confirm('Are you sure you want to delete this record??')"><i style=" " class="fa fa-trash">Delete</i></a> </td>
                                       
-                                     
+                                        
+                                    <td><a href="class_list?course=<?php  echo $rtmt[COURSE_CODE] ; ?>&&sem=<?php  echo $rtmt[COURSE_SEMESTER] ; ?>&&level=<?php echo $rtmt["COURSE_LEVEL"] ; ?>&&year=<?php  echo $rtmt[COURSE_YEAR] ; ?>" ><i style=" " class="fa fa-files-o">Broadsheet</i></a> </td>
+                                    <td><a href="class_list?course=<?php  echo $rtmt[COURSE_CODE] ; ?>&&sem=<?php  echo $rtmt[COURSE_SEMESTER] ; ?>&&level=<?php echo $rtmt["COURSE_LEVEL"] ; ?>&&year=<?php  echo $rtmt[COURSE_YEAR] ; ?>" ><i style=" " class="fa fa-files-o">Assessment</i></a> </td>
+  
                                     </tr>
                                     <?php }?>
                                      
                             </tbody>
                           </table>  
-<br/>
-                         <center><div class="pagination"> <?php echo $page->renderFullNav() ?> </div></center>
+                        <br/>
+                        <center><?php
+                         $GenericEasyPagination->setTotalRecords($recordsFound);
+	  
+                        echo $GenericEasyPagination->getNavigation();
+                        echo "<br>";
+                        echo $GenericEasyPagination->getCurrentPages();
+                      ?></center>
 </div>
                                     <?php }else{
                   echo "<div class='alert alert-danger alert-dismissible' role='alert'>

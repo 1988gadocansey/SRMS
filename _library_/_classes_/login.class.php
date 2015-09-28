@@ -98,6 +98,7 @@ namespace _classes_;
                                 $_SESSION['USERNAME']=$userid->USERNAME;
                                 $_SESSION['level']=$userid->USER_TYPE;
                                  $_SESSION['ID']=$userid->ID;
+                                  $_SESSION['worker']=$userid->USER;
                                  
                            if($this->remoteip=='127.0.0.1' || $userid->NET_ADD=='Any'){
 				$this->setLog("Login",$this->session->get("USERNAME") ." has login into the system  ");
@@ -207,7 +208,7 @@ namespace _classes_;
 	
       public function setLog($event,$activity){
                  $userid=$this->session->get("pyuserid");
-                $stmt = $this->connect->Prepare("INSERT INTO `tpoly_system_log` ( `USERNAME`, `EVENT_TYPE`, `ACTIVITIES`, `HOSTNAME`, `IP`, `BROWSER_VERSION`,MAC_ADDRESS,SESSION_ID) VALUES ('".$userid."', '$event','$activity', '".$this->hashkey."','".$this->remoteip."','".$this->useragent."','".$this->mac_addr."','".$this->session->getSessionID()."')");
+                $stmt = $this->connect->Prepare("INSERT INTO `tpoly_system_log` ( `USERNAME`, `EVENT_TYPE`, `ACTIVITIES`, `HOSTNAME`, `IP`, `BROWSER_VERSION`,MAC_ADDRESS,SESSION_ID) VALUES ('".$_SESSION['worker']."', '$event','$activity', '".$this->hashkey."','".$this->remoteip."','".$this->useragent."','".$this->mac_addr."','".$this->session->getSessionID()."')");
                 $this->connect->Execute($stmt); 
 
        }

@@ -2,10 +2,10 @@
 namespace classes;
 global $sql,$session,$config;
  
-define( '_PHYLIO','INDEX');
-define("JPATH_ROOT",dirname(__FILE__));
+define( '_TPOLY','INDEX');
+define("TP_ROOT",dirname(__FILE__));
 define("DS",DIRECTORY_SEPARATOR);
-define( 'JPATH_CONFIGURATION', 	JPATH_ROOT );
+define( 'TP_CONFIGURATION', 	TP_ROOT );
  
  
 define('START_YEAR','2015');
@@ -20,6 +20,9 @@ class JConfig {
 	public $debug = false;
 	public $autoRollback= true;
 	public $ADODB_COUNTRECS = false;
+        public $smsusername ="191119572012";
+	public $smspassword="Genesis1v2";
+	public $smsurl="http://site.mytxtbox.com/sms_api";
 	private static $_instance;
 	 
 	public function __construct(){

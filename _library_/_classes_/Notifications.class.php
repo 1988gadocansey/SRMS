@@ -76,7 +76,7 @@ class Notifications {
             $output= $this->connect->Execute($query);
 	 $a=$output->FetchNextObject();
      
-         
+         return $a;
     }
      public function getSemesterYear(){
             $con=  Core::getInstance();
@@ -135,17 +135,21 @@ class Notifications {
      public function Message(){
          
          if(isset($_GET['success'])){
-             echo "<div class='alert alert-success' style='width:426%;margin-left:-29%'>
+              ?>
+<div class="alert alert-success">
+    <button type="button" class="close" data-dismiss="alert">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <div>Well done! Action completed successfully .</div>
+            </div>
+            <?php }
+         elseif(isset($_GET['file'])=='error'){
+             echo "<div class='alert alert-warning'>
                 <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
-                <strong>Notification!</strong>   Action completed successfully.
-         </div>";}
-         elseif(isset($_GET['action'])=='opened'){
-             echo "<div class='alert alert-success'>
-                <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
-                <strong>Notification!</strong>   Semester openned successfully.
+                <strong>Notification!</strong>  File uploaded is not a csv file. please upload a file in csv format.
          </div>";}
          elseif(isset($_GET['no_internet'])){
-             echo "<div class='alert alert-warning' style='width:426%;margin-left:-29%'>
+             echo "<div class='alert alert-warning' style=''>
                 <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
                 <strong>Notification!</strong>   Please check your internet connection.
          </div>";}
@@ -168,4 +172,6 @@ class Notifications {
                 <strong>Warning!</strong> Authentication failed <a href='#' class='alert-link'>No courses has been registered</a>.
          </div>";}
     }
+
 }
+ 

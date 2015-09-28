@@ -1,8 +1,8 @@
 <?php
-//error_reporting(1);
+error_reporting(1);
   require 'config.php';
  global $sql;
-$query=$sql->prepare("SELECT * FROM tbl_modules AS top JOIN tpoly_auth AS auth ON top.USER_ID='$_SESSION[ID]' ");
+$query=$sql->prepare("SELECT * FROM tbl_modules AS top JOIN tpoly_auth AS auth ON top.USER_ID=auth.ID WHERE auth.ID='$_SESSION[ID]' ");
 			 
   $stmt=$sql->Execute($query);
 if($stmt->RecordCount() > 0){

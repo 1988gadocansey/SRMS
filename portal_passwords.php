@@ -242,6 +242,7 @@ $result_=$sql->Execute($result);
 </div>
  
 <?php include("_library_/_includes_/scripts.php");  ?>
+<script type='text/javascript' src="autocompletion/jquery.js"></script>
 <script type='text/javascript' src="autocompletion/jquery.autocomplete.js"></script>
 <script type='text/javascript' src="autocompletion/localdata.js"></script>
 <script type="text/javascript">

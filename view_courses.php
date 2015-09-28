@@ -5,6 +5,7 @@ ini_set('display_errors', 0);
     require '_library_/_includes_/config.php';
     require '_library_/_includes_/app_config.inc';
     $help=new _classes_\helpers();
+     $notify=new _classes_\Notifications();
      if($_GET[program]){
         $_SESSION[program]=$_GET[program];
         }
@@ -23,6 +24,124 @@ ini_set('display_errors', 0);
         if($_GET[level]){
         $_SESSION[levels]=$_GET[level];
         }
+        if($_POST[go]){
+        $_SESSION[search]=$_POST[search];
+        $_SESSION[content]=$_POST[content];
+        }
+        if (isset($_GET[delete])) {
+
+            $query = $sql->Prepare("DELETE FROM tpoly_courses WHERE ID='$_GET[delete]'");
+            if ($sql->Execute($query)) {
+                header("location:view_courses?success=1");
+            } else {
+                header("location:view_courses?error=1");
+            }
+        }
+if (isset($_POST['go'])){
+              
+              
+           $query=$sql->Prepare("INSERT INTO tpoly_courses SET  COURSE_NAME=".$sql->Param('a').", COURSE_CODE=".$sql->Param('b')."  , COURSE_CREDIT=".$sql->Param('c').", COURSE_SEMESTER=".$sql->Param('d').",COURSE_LEVEL=".$sql->Param('e').",COURSE_TYPE=".$sql->Param('f').",PROGRAMME=".$sql->Param('g')." ");
+
+           if( $query=$sql->Execute( $query,array($_POST[course],$_POST[code] ,$_POST[credit],$_POST[term],$_POST[level],$_POST[type],$_POST[program] ))){
+              
+              header("location:view_courses?success");
+             }
+         }
+  //////////////////////////////////////////////////////////////////////////////
+        if (isset($_POST[sync])) {
+           if ($help->ping("www.google.com", 80, 20)) {
+            $string = $sql->Prepare($_SESSION[last_query]);
+            $row2 = $sql->Execute($string);
+
+        while ($row = $row2->FetchRow()) {
+            set_time_limit(500);
+            $course_name = $row[COURSE_NAME];
+            $course_code = $row[COURSE_CODE];
+            $credit = $row[COURSE_CREDIT];
+            $level = $row[COURSE_LEVEL];
+            $semester = $row[COURSE_SEMESTER];
+          
+            $program = $row[PROGRAMME];
+           
+            $type = $row[COURSE_TYPE];
+
+            $format_data = " COURSE_NAME='$course_name', COURSE_CODE='$course_code',  COURSE_CREDIT='$credit', COURSE_LEVEL='$level', COURSE_SEMESTER='$semester', COURSE_YEAR='$year',COURSE_TYPE='$type',   PROGRAMME='$program' ";
+
+            $post = array('type' => 'courses', 'data' => $format_data, 'user' => $_POST['headings'], 'pass' => $_POST['footing']);
+            
+            $result = $help->sync_to_online($url, $post);
+            if ($result) {
+
+                $query = $sql->Prepare("UPDATE tpoly_courses SET SYNC='1'  where ID='$row[ID]'");
+                if ($sql->Execute($query)) {
+                    // then clear query
+                    $_SESSION[query] = "";
+                    header("location:view_courses?success");
+                }
+            }
+        }
+    } else {
+        header("location:view_mounted_courses?no_internet");
+    }
+}
+/////////////////////////////////////////////////////////////////////////////
+        // upload csv
+        if(isset($_POST[import])){
+     
+              	//check if file path is empty
+            $extension= end(explode(".", basename($_FILES['file']['name'])));
+            // check if file is csv
+             if($extension== 'csv'){
+
+            
+                    if (!$_FILES["file"]["name"]) {
+                        echo " <font color='red' style='text-decoration:blink'>Please choose a file to upload</font>";
+                        $error = 1;
+                    }
+
+                    elseif (($_FILES["file"]["size"] ) > 250000000000) {
+                        echo "Only files of size less than 250MB accepted";
+                        $error = 3;
+                    }
+
+                    $name = $_FILES["file"]["name"];
+                    //$var= $name.$_SESSION[area];
+
+                    if ($error > 0) {
+
+                    } else {
+
+                        $destination = "uploads/$name";
+                        move_uploaded_file($_FILES["file"]["tmp_name"], $destination);
+                        if (move_uploaded_file) {
+
+                            # create new parseCSV object.
+                            $csv = new parseCSV();
+                          # Parse '_books.csv' using automatic delimiter detection...
+                            $csv->auto($destination);
+
+
+                            //print_r($csv->data);
+
+                            foreach ($csv->data as $key => $row) { 
+
+                               // print_r( $row);
+
+
+                                    $query=$sql->Prepare("INSERT INTO  `tpoly_courses` SET   `COURSE_CODE`='$row[COURSE_CODE]', `COURSE_NAME`='$row[COURSE_NAME]', `COURSE_CREDIT`='$row[COURSE_CREDIT]', `PROGRAMME`='$row[PROGRAMME]',   `COURSE_SEMESTER`='$row[COURSE_SEMESTER]', `COURSE_LEVEL`='$row[COURSE_LEVEL]', `COURSE_TYPE`='$row[COURSE_TYPE]' ");
+                                    if($sql->Execute($query)){
+                                        header("location:view_courses?success=1");
+                                    }
+
+                                }
+
+
+                }
+
+
+            }
+          }
+        }
 
 ?>
 
@@ -39,7 +158,7 @@ ini_set('display_errors', 0);
 		<div class="container">
 			<!-- BEGIN PAGE TITLE -->
 			<div class="page-title">
-				<h4>Welcome <small>Start here</small></h4>
+				 
 			</div>
 			<!-- END PAGE TITLE -->
 			<!-- BEGIN PAGE TOOLBAR -->
@@ -53,21 +172,53 @@ ini_set('display_errors', 0);
 	<!-- BEGIN PAGE CONTENT -->
 	<div class="page-content">
 		<div class="container">
-			 
-			 <div class="modal fade" id="mount" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal fade" id="import" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Import Bulk Courses</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            
+                                            <form action="view_courses.php" method="POST" class="form-horizontal" role="form" enctype="multipart/form-data">
+                                                 <div class="card-body card-padding">
+                                                     <div class="form-group">
+                                                         <label for="inputPassworsd3" class="col-sm-2 control-label">select csv file</label>
+                                                         <div class="col-sm-10">
+
+                                                             <div class="fg-line">
+                                                                  
+                                                                          <input type="file" required="" class="form-control" name="name"  >                                     
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                <div class="modal-footer">
+                                                      
+                                                        <button type="submit" name="import" class="btn btn-success">Save</button>
+                                                          <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+                                                </div>
+                                                  
+                                                 </div>
+                                             </div>  
+                                            </form>
+                                  </div>
+                                </div>
+                        </div>
+			 <!--//////////////////////////////////////////////////// -->
+			 <div class="modal fade" id="course" tabindex="-1" role="dialog" aria-hidden="true">
                                 <div class="modal-dialog modal-lg">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h4 class="modal-title">Add Course</h4>
                                         </div>
                                         <div class="modal-body">
-                               <form action="program.php?add=1" method="POST" class="form-horizontal" role="form">
+                                            <form action="view_courses?add=1" method="POST" class="form-horizontal" role="form">
                                                  <div class="card-body card-padding">
                                                      <div class="form-group">
                                                          <label for="inputEmail3"    class="col-sm-2 control-label">Name</label>
                                                          <div class="col-sm-10">
                                                              <div class="fg-line">
-                                                                 <input type="text" class="form-control input-sm" id="" name="name"placeholder="Program Name" required="">
+                                                                 <input type="text" class="form-control input-sm" id="" name="course"placeholder="course name" required="">
                                                              </div>
                                                          </div>
                                                      </div>
@@ -76,16 +227,100 @@ ini_set('display_errors', 0);
                                                          <div class="col-sm-10">
 
                                                              <div class="fg-line">
-                                                                 <input type="text" name ="code" required="" class="form-control input-sm" id=" " placeholder="Enter program code">
+                                                                 <input type="text" name ="code" required="" class="form-control input-sm" id=" " placeholder="course code">
                                                              </div>
                                                          </div>
                                                      </div>
                                                       <div class="form-group">
-                                                         <label for="inputPassword3" class="col-sm-2 control-label">Department</label>
+                                                         <label for="inputPassword3" class="col-sm-2 control-label">Credit</label>
                                                          <div class="col-sm-10">
 
                                                              <div class="fg-line">
-                                                                 <input type="text" name ="department" required="" class="form-control input-sm" id=" " placeholder="Enter department">
+                                                                <select class='form-control input-sm'  name='type'  style="  " required="" >
+                                                                    <option value=''>select course type</option>
+                                                                   
+                                                                       <option value='Elective'<?php if($_SESSION[tedrm]=='1'){echo 'selected="selected"'; }?>>Elective</option>
+                                                                       <option value='Core'<?php if($_SESSION[tderm]=='2'){echo 'selected="selected"'; }?>>Course</option>
+                                                                   
+
+                                                               </select>
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                      <div class="form-group">
+                                                         <label for="inputPassword3" class="col-sm-2 control-label">credit</label>
+                                                         <div class="col-sm-10">
+
+                                                             <div class="fg-line">
+                                                                <select class='form-control input-sm'  name='credit'  style="  " required="" >
+                                                                    <option value=''>select credit hour</option>
+                                                                   
+                                                                       <option value='1'<?php if($_SESSION[tedrm]=='1'){echo 'selected="selected"'; }?>>1</option>
+                                                                       <option value='2'<?php if($_SESSION[tderm]=='2'){echo 'selected="selected"'; }?>>2</option>
+                                                                   <option value='3'<?php if($_SESSION[terms]=='3'){echo 'selected="selected"'; }?>>3</option>
+
+                                                               </select>
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                     <div class="form-group">
+                                                         <label for="inputPassworsd3" class="col-sm-2 control-label">Level</label>
+                                                         <div class="col-sm-10">
+
+                                                             <div class="fg-line">
+                                                                  <select class='form-control input-sm'  name='level'  style="" >
+                                                                        <option value=''>Filter by level</option>
+                                                                        
+                                                                       <option value='50'<?php if($_SESSION[levelss]=='50'){echo 'selected="selected"'; }?>>50</option>
+                                                                           <option value='100'<?php if($_SESSION[levelss]=='100'){echo 'selected="selected"'; }?>>100</option>
+                                                                           <option value='200'<?php if($_SESSION[levesls]=='200'){echo 'selected="selected"'; }?>>200</option>
+                                                                       <option value='300'<?php if($_SESSION[levelxs]=='300'){echo 'selected="selected"'; }?>>300</option>
+                                                                       <option value='400'<?php if($_SESSION[levelss]=='400'){echo 'selected="selected"'; }?>>400</option>
+
+                                                                   </select>
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                     <div class="form-group">
+                                                         <label for="inputPasswsord3" class="col-sm-2 control-label">Semester</label>
+                                                         <div class="col-sm-10">
+
+                                                             <div class="fg-line">
+                                                                 <select class='form-control input-sm'  name='term'  style="" required="" >
+                                                                        <option value=''>select semester</option>
+                                                                        
+                                                                           <option value='1'<?php if($_SESSION[tedrm]=='1'){echo 'selected="selected"'; }?>>1st</option>
+                                                                           <option value='2'<?php if($_SESSION[termd]=='2'){echo 'selected="selected"'; }?>>2nd</option>
+                                                                       <option value='3'<?php if($_SESSION[terdm]=='3'){echo 'selected="selected"'; }?>>3rd</option>
+
+                                                                   </select>
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                     <div class="form-group">
+                                                         <label for="inputEmail3s"    class="col-sm-2 control-label">Program</label>
+                                                         <div class="col-sm-10">
+                                                             <div class="fg-line">
+                                                                 <select class='select2_category form-control input-sm'  name='program' required="" style="" >
+                                                                     <option value=''>Select program</option>
+                                                                        
+                                                                    <?php 
+                                                                      global $sql;
+
+                                                                          $query2=$sql->Prepare("SELECT * FROM tpoly_programme ");
+
+
+                                                                          $query=$sql->Execute( $query2);
+
+
+                                                                       while( $row = $query->FetchRow())
+                                                                         {
+
+                                                                         ?>
+                                                                         <option <?php ?> value="<?php echo $row['PROGRAMMECODE']; ?>"        ><?php echo $row['PROGRAMME']; ?></option>
+
+                                                                  <?php }?>
+                                                                      </select>
                                                              </div>
                                                          </div>
                                                      </div>
@@ -93,10 +328,11 @@ ini_set('display_errors', 0);
                                                  </div>
                                              
                                         </div>
-                                        <div class="modal-footer">
-											<button type="button" data-dismiss="modal" class="btn btn-warning">Close</button>
-											<button type="button" class="btn btn-primary">Ok</button>
-										</div>
+                                        <div class="modal-footer">          
+                                            <button name="go" type="submit" class="btn btn-success">Save<i class="fa fa-save"></i></button>
+                                            <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+
+                                        </div>
                                    </form>
                                     </div>
                                 </div>
@@ -105,18 +341,20 @@ ini_set('display_errors', 0);
 			<!-- BEGIN PAGE CONTENT INNER -->
 			<div class="row">
 				<div class="col-md-12">
+                                    <div><?php $notify->Message(); ?></div>
 					<div class="note note-success note-bordered">
 						<p>
-							Course Databank
+							Course Folder
 						</p>
                                                 <div style="margin-top:-2.2%;float:right">
-                                                    <button id="sample_editable_1_new" class="btn green">
+                                                    
+                                                    <button data-toggle="modal" class="btn  btn-primary waves-effect waves-button"    data-target="#course">
 											Add New Course <i class="fa fa-plus"></i>
 											</button>
-                                                    <button class="btn btn-success">Sync to Online Portal<i class="fa fa-cloud-upload"></i></button>
-                                                <button class="btn  btn-success">import course<i class="md md-file-upload"></i></button>
-                                                 <button  data-target="#mount" data-toggle="modal" class="btn bgm-pink waves-effect">Mount Course<i class="fa fa-tasks"></i></button>
-                                                 <button   class="btn btn-primary waves-effect waves-button dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bars"></i> Export Data</button>
+                                                    
+                                                <button class="btn  btn-pink waves-effect waves-button"  data-target="#import" data-toggle="modal">import csv (course)<i class="fa fa-file-excel-o"></i></button>
+                                                 
+                                                 <button   class="btn btn-success waves-effect waves-button dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bars"></i> Export Data</button>
                                                         <ul class="dropdown-menu">
                                             
                                                             <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'csv',escape:'false'});"><img src='assets/icons/csv.png' width="24"/> CSV</a></li>
@@ -129,6 +367,10 @@ ini_set('display_errors', 0);
                                                 <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'png',escape:'false'});"><img src='assets/icons/png.png' width="24"/> PNG</a></li>
                                                 <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'pdf',escape:'false'});"><img src='assets/icons/pdf.png' width="24"/> PDF</a></li>
                                               </ul>
+                                                  <form action="" method="post">
+											 
+                                                        <button  type="submit" style="margin-top:-10%;margin-left:-234px"name="sync" class="btn  btn-success waves-effect waves-button">Sync to Online Portal<i class="fa fa-cloud-upload"></i></button>
+                                                    </form>
                                               </div>
                             
 					</div>
@@ -140,7 +382,7 @@ ini_set('display_errors', 0);
                      
                 	    <td width="20%">
 
-                                    <select class='form-control'  name='subject'  style="margin-left:-38%; width:167% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?program='+escape(this.value);" >
+                                    <select class='form-control'  name='subject'  style="margin-left:-43%; width:160% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?program='+escape(this.value);" >
                                 <option value=''>Filter by programme</option>
                                         <option value='All programs'>All Programs</option>
                                     <?php 
@@ -165,7 +407,7 @@ ini_set('display_errors', 0);
                              <td>&nbsp;</td>
                              
 				 <td width="25%">
-                        <select class='form-control'  name='subject'  style="margin-left:57%; width:140% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?course='+escape(this.value);" >
+                        <select class='form-control'  name='subject'  style="margin-left:23%; width:116% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?course='+escape(this.value);" >
                       <option value=''>Filter Courses</option>
                               <option value='All Courses'>All Courses</option>
                           <?php 
@@ -189,7 +431,7 @@ ini_set('display_errors', 0);
                         </td>
                       <td>&nbsp;</td>
                                 <td width="25%">
-                                    <select class='form-control'  name='term'  style="margin-left:92%;  width:58% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?level='+escape(this.value);" >
+                                    <select class='form-control'  name='term'  style="margin-left:54%;  width:58% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?level='+escape(this.value);" >
                                          <option value=''>Filter by level</option>
                                         <option value='All level'>All Levels</option>
                                         <option value='50'<?php if($_SESSION[levels]=='50'){echo 'selected="selected"'; }?>>50</option>
@@ -205,7 +447,7 @@ ini_set('display_errors', 0);
                     <td>&nbsp;</td>
                       <td width="20%">
 
-                        <select class='form-control'  name='term'  style="margin-left:92%;  width:58% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?term='+escape(this.value);" >
+                        <select class='form-control'  name='term'  style="margin-left:16%;  width:58% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?term='+escape(this.value);" >
                                          <option value=''>Filter by semester</option>
                                         <option value='All terms'>All semesters</option>
                                             <option value='1'<?php if($_SESSION[term]=='1'){echo 'selected="selected"'; }?>>1st</option>
@@ -216,17 +458,32 @@ ini_set('display_errors', 0);
 
                      </td>
                     <td>&nbsp;</td>
-                    
-                      
-        
-                    <td>
+                  <form action="" method="post" >
+                      <td width="25%">
+                          
+                                                         
+                          <input type="text" name ="search" placeholder="search here"required="" style="margin-left:-38%;  width:141% " class="form-control" id=" "  >
+                                                             
+                      </td>
+                      <td>&nbsp;</td>
+                       <td width="25%">
+                           <select class='form-control'  name='content' required="" placeholder="search here" style="margin-left:12%;  width:412% "  >
+                                         <option value=''>search by</option>
+                                        
+                                        <option value='SURNAME'<?php if($_SESSION[content]=='SURNAME'){echo 'selected="selected"'; }?>>Course</option>
+                                        <option value='FIRSTNAME'<?php if($_SESSION[status]=='FIRSTNAME'){echo 'selected="selected"'; }?>>Programme</option>
+                                        <option value='INDEXNO'<?php if($_SESSION[status]=='INDEXNO'){echo 'selected="selected"'; }?>>Department</option>
+                                        <option value='PROGRAMMECODE'<?php if($_SESSION[status]=='PROGRAMMECODE'){echo 'selected="selected"'; }?>>Level</option>
+                                        <option value='LEVEL'<?php if($_SESSION[status]=='LEVEL'){echo 'selected="selected"'; }?>>Type</option>
 
-                       <!-- <div class="form-action ">
-                                <button type="submit" name="submit" class="btn ink-reaction btn-raised btn-primary">Search</button>
+                                    </select>
 
-                        </div> -->
-                    </td>
-        
+                      </td>
+                       
+                      <td>&nbsp;</td>
+                      <td width="25%">
+                            <button type="submit"  name="go" style="margin-left:105%;width: 81px " class="btn btn-success">Search <i></button>
+                      </td>
                     </tr>  
                 </form>
                 </table>
@@ -238,7 +495,7 @@ ini_set('display_errors', 0);
 							<div class="tools">
 							</div>
 						</div>
-			<div class="portlet-body">
+			<div class="portlet-body table-responsive basic-table" >
                                             <?php 
                                             $program=$_SESSION[program];                                       
                                             $course=$_SESSION[course];
@@ -253,10 +510,12 @@ ini_set('display_errors', 0);
 
                                             $query="SELECT  * FROM tpoly_courses  WHERE 1  $term_ $level_ $program_ $course_   ORDER BY COURSE_NAME ASC ";
                                              
-                                                $page=new classes\OS_Pagination($query, $query) ;
-                                                $stmt= $page->paginate() ;
-                                            if($stmt->RecordCount()>0){
-                                         ?>
+                                               $_SESSION[last_query]=$query; 
+                                                 $rs = $sql->PageExecute($query,RECORDS_BY_PAGE,CURRENT_PAGE);
+                                                 $recordsFound = $rs->_maxRecordCount;    // total record found
+                                                if (!$rs->EOF) 
+                                                {
+                                             ?>
                            
                     <div class="table-responsive">
                         <table   id="data-table-command" class="table table-striped table-vmiddle"  >
@@ -271,18 +530,18 @@ ini_set('display_errors', 0);
                                    
                                     <th data-column-id="Level" data-order="asc" style="text-align:center">LEVEL</th>
                                     <th data-column-id="Semester" style="text-align:center">SEMESTER</th>
-                                     <th data-column-id="Type">TYPE</th>
+                                     <th data-column-id="Type" style="text-align:center">TYPE</th>
                                      
                                      <th data-column-id=" " data-order="" style="text-align: center" colspan="2">ACTIONS</th>
                                       
                                 </tr>
                             </thead>
-                            <p align="center"style="color:red">  <?php echo $stmt->RecordCount() ?> Records </p>
+                            <p align="center"style="color:red">  <?php echo $recordsFound ?> Records </p>
                             <tbody>
                                 <?php
                                 
                                    $count=0;
-                                    while($rtmt=$stmt->FetchRow()){
+                                    while($rtmt=$rs->FetchRow()){
                                                             $count++;
                                                         if($rtmt["COURSE_SEMESTER"]==1){
                                                             $sem="1st"; 
@@ -303,17 +562,23 @@ ini_set('display_errors', 0);
                                     <td style="text-align: center"><?php echo strtoupper($sem) ?></td>
                                     <td style="text-align: center"><?php echo strtoupper( $rtmt["COURSE_TYPE"]) ?></td>
                                      
-                                    <td><a href=""><i style="color: green" class=" md-mode-edit">Edit</i></a></td>
-                                    <td><a href=""><i style="color: red" class="md md-clear">Delete</i></a> </td>
-                                      
+                                    
+                                    <td><a href="view_courses?delete=<?php  echo $rtmt[ID] ; ?>" onclick="return confirm('Are you sure you want to delete this record??')"><i style=" " class="md md-delete">Delete</i></a> </td>
+                                     
                                      
                                     </tr>
                                     <?php }?>
                                      
                             </tbody>
                           </table>  
-<br/>
-                         <center><div class="pagination"> <?php echo $page->renderFullNav() ?> </div></center>
+                            <br/>
+                        <center><?php
+                         $GenericEasyPagination->setTotalRecords($recordsFound);
+	  
+                        echo $GenericEasyPagination->getNavigation();
+                        echo "<br>";
+                        echo $GenericEasyPagination->getCurrentPages();
+                      ?></center>
 </div>
                                     <?php }else{
                   echo "<div class='alert alert-danger alert-dismissible' role='alert'>

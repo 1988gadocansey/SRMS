@@ -6,20 +6,31 @@ ini_set('display_errors', 0);
     require '_ini_.php';
     require '_library_/_includes_/config.php';
    //require '_library_/_includes_/app_config.inc';
-  
-$result = $sql->Prepare("SELECT * FROM `tpoly_auth`");
+  $worker=new _classes_\Users();
+ $result = $sql->Prepare("SELECT * FROM `tpoly_auth`");
 $result_=$sql->Execute($result);
-
+ 
 $outp = "";
 while($rs = $result_->FetchRow()) {
+    if($rs["ACTIVE"]==1){
+        $status="<span class='label label-success'>Active</span>";
+    }
+    else{
+         $status="<span class='label label-danger'>Inactive</span>";
+    }
+     $user=$worker->userDetails($rs["USER"]) ;
+    $username=$user->USERNAME;
+    $since=date("d/m/Y",$rs["USER_SINCE"]);
+    $last_login=date("d/m/Y",$rs["LAST_LOGIN"]);
     if ($outp != "") {$outp .= ",";}
-    $outp .= '{"user":"'  . $rs["USER"] . '",';
-    $outp .= '"since":"'   . $rs["USER_SINCE"]        . '",';
+    $outp .= '{"user":"'  . $username . '",';
+    $outp .= '"since":"'   . $since        . '",';
     $outp .= '"type":"'   . $rs["USER_TYPE"]        . '",';
     $outp .= '"ip":"'   . $rs["NET_ADD"]        . '",';
-    $outp .= '"last_login":"'   . $rs["LAST_LOGIN"]        . '",';
+    $outp .= '"last_login":"'   . $last_login        . '",';
+     $outp .= '"online":"'   . $rs["ONLINE"]        . '",';
      
-    $outp .= '"active":"'. $rs["ACTIVE"]     . '"}'; 
+    $outp .= '"active":"'. $status    . '"}'; 
      
 }
 $outp ='{"records":['.$outp.']}';

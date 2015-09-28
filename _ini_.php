@@ -17,6 +17,7 @@
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
+ini_set('display_errors', 0);
 	define('ENVIRONMENT', 'development');
 /*
  *---------------------------------------------------------------
@@ -125,5 +126,8 @@ if( ! ini_get('date.timezone') )
 if (($loader = require_once __DIR__ . '/vendor/autoload.php') == null)  {
   die('Vendor directory not found, Please run composer install.');
 }
-                
-                
+            
+/**
+ * change this 0 to run the installation again
+ */
+$installed=1; // important

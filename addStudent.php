@@ -4,7 +4,7 @@ require 'vendor/autoload.php';
 require '_ini_.php';
 require '_library_/_includes_/config.php';
 require '_library_/_includes_/app_config.inc';
-$url = "http://www.tpolyonline.com/Portal/sync_from_local.php";
+ 
 $help = new _classes_\helpers();
 $notify = new _classes_\Notifications();
 $security = new _classes_\cryptCls();
@@ -77,7 +77,7 @@ if (isset($_GET['upload'])) {
         <div class="container">
             <!-- BEGIN PAGE TITLE -->
             <div class="page-title">
-<?php $notify->Message(); ?>
+ 
             </div>
             <!-- END PAGE TITLE -->
             <!-- BEGIN PAGE TOOLBAR -->
@@ -97,6 +97,7 @@ if (isset($_GET['upload'])) {
             <!-- BEGIN PAGE CONTENT INNER -->
             <div class="row">
                 <div class="col-md-12">
+                      <div><?php $notify->Message(); ?></div>
                     <div class="note note-success note-bordered">
                         <p>
                             Add / Edit Students here
@@ -287,12 +288,12 @@ echo $help->picture("photos/students/$person.jpg", 199) ?>  src="<?php echo file
                                                 <div class="col-md-9">
                                                     <div class="radio-list">
                                                         <label class="radio-inline">
-                                                            <input type="radio" name="student_type" value="Resident" value="<?php echo $rows->STUDENT_TYPE; ?>" <?php if ($rows->STUDENT_TYPE == 'Resident') {
+                                                            <input type="radio" name="student_type" value="1" value="<?php echo $rows->STUDENT_TYPE; ?>" <?php if ($rows->STUDENT_TYPE == 'Resident') {
                                     echo 'check="checked"';
                                 } ?>/>
                                                             Resident </label>
                                                         <label class="radio-inline">
-                                                            <input type="radio" name="student_type" value="Non Resident" <?php if ($rows->STUDENT_TYPE == 'Non Resident') {
+                                                            <input type="radio" name="student_type" value="0" <?php if ($rows->STUDENT_TYPE == 'Non Resident') {
                                                             echo 'check="checked"';
                                                         } ?>/>
                                                             Non Resident </label>
@@ -643,6 +644,7 @@ echo $help->picture("photos/students/$person.jpg", 199) ?>  src="<?php echo file
                                                        <option value='Suspended'<?php if($rows->STATUS=='Suspended'){echo 'selected="selected"'; }?>>Suspended</option>
                                                        <option value='Rasticated'<?php if($rows->STATUS=='Rasticated'){echo 'selected="selected"'; }?>>Rasticated</option>
                                                        <option value='Alumni'<?php if($rows->STATUS=='Alumni'){echo 'selected="selected"'; }?>>Alumni</option>
+                                                       <option value='Fresh'<?php if($rows->STATUS=='Fresh'){echo 'selected="selected"'; }?>>Fresh</option>
                                                    </select>
 
                                                 </div>

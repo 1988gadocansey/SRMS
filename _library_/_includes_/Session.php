@@ -8,7 +8,7 @@
 	if(!isset($_SESSION['USERNAME']))
 	{
 
-		header("location:index.php");
+		header("location:index");
 		exit();
 
 	}
@@ -30,7 +30,7 @@ function logOut(){
         setcookie(session_name(), '', time()-42000, '/'); 
     } 
     session_destroy();  
-    header("location:index.php?logoutS=1");
+    header("location:index?logout=1");
 } 
 
 # Session Logout after in activity 
@@ -60,7 +60,7 @@ function logOut(){
             session_unset();
             logOut();
             # Redirect to login page to log back in 
-            header("Location:index.php"); 
+            header("Location:index"); 
             exit; 
         }else{ 
             # If they have not exceded the time limit of inactivity, keep them logged in 

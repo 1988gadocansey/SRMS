@@ -182,6 +182,17 @@ public function getApplicationMode($mode){
     $a=$output->FetchNextObject();
     return $a->MODE;
 }
+public function getGradeValue($grade) {
+          
+       
+        $STM2 = $this->connect->Prepare("select grade,comment from tpoly_gradeDefinition where   lower <='$grade' and upper >= '$grade'   ");
+        $row= $this->connect->Execute($STM2);
+                if($row){
+                      $output= $row->FetchNextObject();
+                      return $output ;
+                }
+		 
+       }
  public function password() {
         $alphabet = "ABCDEFGHJKMNPQRSTUWXYZ23456789";
         
@@ -259,6 +270,17 @@ public function getindexno(){
 }
 public function UpdateIndexno(){
     $query=$this->connect->Prepare("UPDATE tpoly_indexno SET no=no + 1");
+    $query2=  $this->connect->Execute($query);
+    
+}
+public function getReceipt(){
+    $query=$this->connect->Prepare("SELECT no FROM tpoly_receipt_gen");
+    $query2=$this->connect->Execute($query);
+    $data=$query2->FetchNextObject();
+    return $data->NO;
+}
+public function UpdateReceipt(){
+    $query=$this->connect->Prepare("UPDATE tpoly_receipt_gen SET no=no + 1");
     $query2=  $this->connect->Execute($query);
     
 }

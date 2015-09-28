@@ -1834,6 +1834,11 @@ Glyphicons Demo
     width: 12.5%;
   }
 }
+.btn-pink {
+    color: #FFF;
+    background-color: #E91E63;
+    border-color: #E8175E;
+}
 /***
 Customized Bootstrap Alerts
 ***/
@@ -2118,11 +2123,24 @@ Customized Bootstrap Buttons
   color: #00BCD4;
   background-color: #fff;
 }
-
+btn-pink {
+    color: #FFF;
+    background-color: #E91E63;
+    border-color: #E8175E;
+}
+.btn-line-primary:hover,
+.btn-line-primary:focus,
+.btn-line-primary:active,
+.btn-line-primary.active,
+.open > .dropdown-toggle.btn-line-primary {
+  color: #ffffff;
+  background-color: #3f51b5;
+}
 .btn-success {
-  color: #fff;
-  background-color: #26A69A;
-  border-color: #219187;
+  
+ color: #FFF;
+background-color: #4CAF50;
+border-color: #4AAB4E
 }
 .btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.active {
   color: #fff;
@@ -2416,10 +2434,10 @@ Customized Bootstrap Buttons
     -moz-user-select: none;
     transition: all 0.3s ease-out 0s;
 }
-.btn-primary {
-    color: #FFF;
-    background-color: #2196F3;
-    border-color: #0D8AEE;
+.btn-line-primary {
+  color: #464646;
+  background-color: transparent;
+  border-color: #3e4fb1;
 }
 .btn {
     display: inline-block;
@@ -4528,8 +4546,8 @@ Notes
   color: #d6f5f3;
 }
 .note.note-success.note-bordered {
-  background-color: #25a296;
-  border-color: #186853;
+  background: #607D8B none repeat scroll 0% 0%;
+   
   margin-left: -88px;
      width: 1312px;
 }

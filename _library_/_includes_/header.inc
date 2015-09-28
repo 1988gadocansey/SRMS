@@ -21,6 +21,7 @@
 <link href="assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 <link href="assets/bootgrid/jquery.bootgrid.min.css" rel="stylesheet">
 <link href="assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="assets/main.min.css">
 <!-- END GLOBAL MANDATORY STYLES -->
 <!-- BEGIN THEME STYLES -->
 <link href="assets/global/css/components-md.css" id="style_components" rel="stylesheet" type="text/css">
@@ -35,47 +36,88 @@
         
         background-color: #FFFCBE;
     }
+    #assesment  tr:hover{
+        
+        background-color: #FFFCBE;
+    }
+    #bill  tr:hover{
+        
+        background-color: #FFFCBE;
+    }
 </style>
 <script>
-/*
-     * Fullscreen Browsing
-     */
-    if ($('[data-action="fullscreen"]')[0]) {
-	var fs = $("[data-action='fullscreen']");
-	fs.on('click', function(e) {
-	    e.preventDefault();
-	    	    
-	    //Launch
-	    function launchIntoFullscreen(element) {
-		
-		if(element.requestFullscreen) {
-		    element.requestFullscreen();
-		} else if(element.mozRequestFullScreen) {
-		    element.mozRequestFullScreen();
-		} else if(element.webkitRequestFullscreen) {
-		    element.webkitRequestFullscreen();
-		} else if(element.msRequestFullscreen) {
-		    element.msRequestFullscreen();
-		}
-	    }
-	    
-	    //Exit
-	    function exitFullscreen() {
-		
-		if(document.exitFullscreen) {
-		    document.exitFullscreen();
-		} else if(document.mozCancelFullScreen) {
-		    document.mozCancelFullScreen();
-		} else if(document.webkitExitFullscreen) {
-		    document.webkitExitFullscreen();
-		}
-	    }
-	    
-	    launchIntoFullscreen(document.documentElement);
-	    fs.closest('.dropdown').removeClass('open');
-	});
-    }
-</script>
+      function check(ids,box){
+		  
+		  var input=document.getElementById(ids).value-0;
+		  var checker=document.getElementById(box).value-0;
+	   
+                    if(input>checker){
+
+                    alert('Score can not be greater than '+checker);
+                    document.getElementById(ids).value="";
+                    document.getElementById(ids).focus();
+                          
+                      return false;
+                    }
+	  
+	  }
+
+        function check70(ids){
+                  if(document.getElementById(ids).value >100 ){
+
+                  alert('Score can not be greater than 100');
+                  document.getElementById(ids).value="";
+                  document.getElementById(ids).focus();
+                                                 
+
+                    return false;
+                  }
+
+	  }
+      
+      </script>
+    <script>
+         function recalculateSum()
+            {
+                var num1 = parseFloat(document.getElementById("pay").value);
+                var num2 = parseFloat(document.getElementById("bill").value);
+                 
+                  
+                     
+                        document.getElementById("amount_left").value =( num2-  num1)    ;
+                     
+                    
+            }         
+function MM_openBrWindow(theURL,winName,features) { //v2.0
+  window.open(theURL,winName,features);
+}      
+						
+function printpage()
+{
+   type=document.getElementById("type").value;
+      draft=document.getElementById("draft").value;
+
+  if(draft==''){ alert('PLEASE TYPE DRAFT NO');
+  return false;
+  }
+  
+  if(type==''){ alert('PLEASE SELECT PAYMENT TYPE');
+  return false;
+  }
+  
+   pay=document.getElementById("pay").value;
+   stuid=document.getElementById("indexno").value;
+   receipt=document.getElementById("receiptno").value;
+   draft=document.getElementById("draft").value;
+  
+   
+	 
+	
+	 
+
+ 
+}
+      </script>
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
@@ -87,3 +129,4 @@
 	<!-- END HEADER TOP -->
 	<!-- BEGIN HEADER MENU -->
         <div class="page-header">
+         

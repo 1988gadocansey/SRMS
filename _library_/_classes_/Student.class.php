@@ -47,10 +47,10 @@ class Student {
     }
 	
 	// get total students in a particular class
-	 public function getTotalStudent_by_Class($class) {
+	 public function getTotalStudent_by_Class($class,$program) {
           
        
-        $STM2 = $this->connect->Prepare("SELECT COUNT(*) AS TOTAL FROM tbl_student WHERE CLASS='$class' ");
+        $STM2 = $this->connect->Prepare("SELECT COUNT(*) AS TOTAL FROM tpoly_students WHERE LEVEL='$class' AND PROGRAMMECODE='$program' AND (STATUS='Continuing Student' OR STATUS='Fresh')");
         $row= $this->connect->Execute($STM2);
         if($row){
          $a= $row->FetchNextObject();
@@ -59,6 +59,36 @@ class Student {
 		else{
 				return 0;
 			}
+    }
+    
+    // total student
+    // get total students in a particular class
+	 public function getTotalStudent() {
+          
+       
+        $STM2 = $this->connect->Prepare("SELECT COUNT(*) AS TOTAL FROM tpoly_students WHERE  STATUS='Continuing Student' OR STATUS='Fresh' ");
+        $row= $this->connect->Execute($STM2);
+        if($row){
+         $a= $row->FetchNextObject();
+		 return $a->TOTAL;
+        }
+		else{
+				return 0;
+			}
+    }
+    
+    public function gettotal_by_level($level) {
+          
+       $STM2 = $this->connect->Prepare("SELECT COUNT(*) AS TOTAL FROM tpoly_students WHERE LEVEL='$level' AND  (STATUS='Continuing Student' OR STATUS='Fresh')");
+        $row= $this->connect->Execute($STM2);
+        if($row){
+         $a= $row->FetchNextObject();
+		 return $a->TOTAL;
+        }
+		else{
+				return 0;
+			}
+         
     }
     
 }

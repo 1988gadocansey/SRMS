@@ -1,14 +1,30 @@
 <?php
-ini_set('display_errors', 0);
+    ini_set('display_errors', 0);
     require 'vendor/autoload.php';
     require '_ini_.php';
     require '_library_/_includes_/config.php';
     require '_library_/_includes_/app_config.inc';
-    $url="http://www.tpolyonline.com/Portal/sync_from_local.php";
+   $sms=new _classes_\smsgetway();
+   
     $help=new _classes_\helpers();
     $notify=new _classes_\Notifications();
     $security=new _classes_\cryptCls();
-    
+    if(isset($_POST[sms])){
+         $q=$_SESSION[last_query];
+        $query=$sql->Prepare($q);
+        $rt=$sql->Execute($query);
+        
+        While($stmt=$rt->FetchRow()){
+            $arrayphone=$stmt[TELEPHONENO];
+        
+        if($a=$sms->sendSMS1($arrayphone, $_POST[message])){
+            $_SESSION[last_query]="";
+        
+            header("location:students?success=1");
+            
+            }
+        }
+    }
     if($_GET[program]){
         $_SESSION[program]=$_GET[program];
         }
@@ -87,7 +103,7 @@ ini_set('display_errors', 0);
 		<div class="container">
 			<!-- BEGIN PAGE TITLE -->
 			<div class="page-title">
-				  <?php $notify->Message();  ?>
+				
 			</div>
 			<!-- END PAGE TITLE -->
 			<!-- BEGIN PAGE TOOLBAR -->
@@ -101,7 +117,38 @@ ini_set('display_errors', 0);
 	<!-- BEGIN PAGE CONTENT -->
 	<div class="page-content">
 		<div class="container">
-			 
+			 <div class="modal fade" id="sms" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Send SMS</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            
+                                            <form action="students" method="POST" class="form-horizontal" role="form" enctype="multipart/form-data">
+                                                 <div class="card-body card-padding">
+                                                     <div class="form-group">
+                                                         <label for="inputPassworsd3" class="col-sm-2 control-label">Message</label>
+                                                         <div class="col-sm-10">
+
+                                                             <div class="fg-line">
+                                                                  
+                                                                 <textarea required="" class="form-control" name="message" rows="9" ></textarea>                                    
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                <div class="modal-footer">
+                                                      
+                                                    <button type="submit" name="sms" class="btn btn-success">Send <i class="fa fa-sm"></i></button>
+                                                          <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+                                                </div>
+                                                  
+                                                 </div>
+                                             </div>  
+                                            </form>
+                                  </div>
+                                </div>
+                        </div>
 			 <div class="modal fade" id="mount" tabindex="-1" role="dialog" aria-hidden="true">
                                 <div class="modal-dialog modal-lg">
                                     <div class="modal-content">
@@ -284,6 +331,7 @@ ini_set('display_errors', 0);
 			<!-- END PAGE BREADCRUMB -->
 			<!-- BEGIN PAGE CONTENT INNER -->
 			<div class="row">
+                            <?php $notify->Message();  ?>
 				<div class="col-md-12">
 					<div class="note note-success note-bordered">
 						<p>
@@ -294,7 +342,7 @@ ini_set('display_errors', 0);
 											 
                                                         <button type="submit" style="margin-left: -235px;"name="sync" class="btn btn-success">Sync to Online Portal<i class="fa fa-cloud-upload"></i></button>
                                                     </form>
-                                                    <button  style="margin-top: -59px"   class="btn bgm-pink waves-effect">Send SMS<i class="fa fa-mobile-phone"></i></button>
+                                                    <button  style="margin-top: -59px"   class="btn bgm-pink waves-effect"  data-target="#sms"  data-toggle="modal">Send SMS<i class="fa fa-mobile-phone"></i></button>
                                                  <button   class="btn btn-primary  waves-effect waves-button dropdown-toggle" style="margin-top: -59px" data-toggle="dropdown"><i class="fa fa-bars"></i> Export Data</button>
                                                         <ul class="dropdown-menu">
                                             
@@ -313,11 +361,11 @@ ini_set('display_errors', 0);
 					</div>
                                     <div>
                                         
-                                  <table  width=" " border="0">
-                    <tr>
+                            <table  width=" " border="0">
+                                <tr>
                      
                      
-                	    <td width="20%">
+                             <td width="20%">
 
                                     <select class='form-control select2_sample1'  name='subject'  style="margin-left:-45%; width:137% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?program='+escape(this.value);" >
                                 <option value=''>Filter by programme</option>
@@ -416,7 +464,7 @@ ini_set('display_errors', 0);
                      </td>
                       <td>&nbsp;</td>
                       <td width="25%">
-                           <select class='form-control'  name='term'   style="margin-left:-1001%;  width:478% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?gender='+escape(this.value);" >
+                                    <select class='form-control'  name='term'   style="margin-left:-1001%;  width:478% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?gender='+escape(this.value);" >
                                          <option value=''>Filter by gender</option>
                                         <option value='All gender'>All gender</option>
                                         <option value='M'<?php if($_SESSION[gender]=='M'){echo 'selected="selected"'; }?>>Male</option>
@@ -495,7 +543,7 @@ ini_set('display_errors', 0);
                                              ?>
                            
                     <div class="table-responsive">
-                        <table  id="data-table-command" class="table table-striped table-vmiddle"  >
+                        <table  id="data-table-command" class="table table-striped table-vmiddle table-condensed"  >
                             <thead>
                                 <tr>
                                     
@@ -532,7 +580,7 @@ ini_set('display_errors', 0);
                                     <tr>
                                     
                                      <td><?php echo $count ?></td>
-                                     <td><a href="addStudent.php?indexno=<?php echo $rtmt[INDEXNO] ?>"><img <?php $help->picture("photos/students/$rtmt[INDEXNO].JPG",250)  ?> style="width:80px;height: 70px"   src="<?php echo file_exists("photos/students/$rtmt[INDEXNO].JPG") ? "photos/students/$rtmt[INDEXNO].JPG":"photos/students/user.jpg";?>" alt=" Picture of Student Here"    /></a></td>
+                                     <td><a href="addStudent.php?indexno=<?php echo $rtmt[INDEXNO] ?>"><img <?php echo $help->picture("photos/students/$rtmt[INDEXNO].JPG",90)  ?>     src="<?php echo file_exists("photos/students/$rtmt[INDEXNO].JPG") ? "photos/students/$rtmt[INDEXNO].JPG":"photos/students/user.jpg";?>" alt=" Picture of Student Here"    /></a></td>
                                      <td style="text-align:left;text-transform: capitalize"><?php echo $rtmt[INDEXNO] ?></td>
                                     <td ><?php  echo $rtmt[SURNAME].", ".$rtmt[FIRSTNAME]." ".$rtmt[OTHERNAMES] ; ?></td>
                                     <td ><?php  echo $help->getProgram($rtmt[PROGRAMMECODE]) ; ?></td>

@@ -200,7 +200,7 @@ Page Header
   background: #181b1e;
 }
 .page-header .page-header-menu {
-  background: #444d58;
+ background: #607D8B none repeat scroll 0% 0%;
   /* Default Mega Menu */
   /* Light Mega Menu */
   /* Header seaech box */
@@ -237,7 +237,7 @@ Page Header
 .page-header .page-header-menu .hor-menu .navbar-nav > li.active > a:hover, .page-header .page-header-menu .hor-menu .navbar-nav > li.current > a,
 .page-header .page-header-menu .hor-menu .navbar-nav > li.current > a:hover {
   color: #f1f1f1;
-  background: #4E5966;
+  background: #607D8B none repeat scroll 0% 0%;
 }
 .page-header .page-header-menu .hor-menu .navbar-nav > li.active > a > i,
 .page-header .page-header-menu .hor-menu .navbar-nav > li.active > a:hover > i, .page-header .page-header-menu .hor-menu .navbar-nav > li.current > a > i,
@@ -437,8 +437,8 @@ Page Footer
 }
 
 .page-footer {
-  background: #3b434c;
-  color: #a2abb7;
+  background: #607D8B none repeat scroll 0% 0%;
+  color: #f1f1f1;
 }
 
 /* Scroll Top */

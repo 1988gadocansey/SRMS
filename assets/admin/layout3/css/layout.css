@@ -1119,7 +1119,7 @@ Page Header
 }
 .page-header .page-header-menu .hor-menu {
   margin: 0 0 0 -17px;
-  margin: 0;
+   
   float: left;
 }
 .page-header .page-header-menu .hor-menu .navbar-nav {
@@ -2118,6 +2118,7 @@ Quick Sidebar Content
   display: inline-block;
   float: left;
   padding: 19px 0;
+  height:17px;
 }
 .page-head .page-title > h1 {
   color: #697882;

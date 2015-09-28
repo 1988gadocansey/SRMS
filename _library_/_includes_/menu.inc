@@ -1,7 +1,8 @@
-<div class="page-header-menu "  >
+<div class="page-header-menu " >
 		<div class="container">
-			 
+                    
                     <div style="float:right;margin-left: 0px">
+                         
 			<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                             <img alt="" class="img-circle" src="photos/workers/gad.jpg" style="width:40px;height:40px;margin-top: 3%">
                             &nbsp;<span style="color:white;margin-top: 2%" class="username username-hide-mobile">Welcome &nbsp; <?php echo strtoupper($_SESSION[USERNAME] )?></span>
@@ -42,9 +43,10 @@
 			<!-- DOC: Apply "hor-menu-light" class after the "hor-menu" class below to have a horizontal menu with white background -->
 			<!-- DOC: Remove data-hover="dropdown" and data-close-others="true" attributes below to disable the dropdown opening on mouse hover -->
                          
-                        <div class="hor-menu  ">
+                        <div class="hor-menu "  style="margin-top: -0.2%">
 				<ul class="nav navbar-nav">
-                                    <li style="margin-left: -44px; font-weight: bolder">
+                                    <li style="margin-left:  -5px; font-weight: bolder">
+                                        
                                         <a style="font-weight: bolder"href="dashboard.php" class="iconify">
                                                 
                                                SRMS </a>
