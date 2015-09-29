@@ -8,6 +8,8 @@ ini_set('display_errors', 0);
  $help=new _classes_\helpers();
      $notify=new _classes_\Notifications();
      $condition=$notify->getyear();
+     $term=$condition->TERM;
+     $year=$condition->YEAR;
    $query=$sql->Prepare("SELECT INDEXNO,LEVEL,`PROGRAMMECODE` FROM tpoly_students WHERE HAS_PASSWORD='0'");
          $query1=$sql->Execute($query);
          

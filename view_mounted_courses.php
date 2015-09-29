@@ -83,6 +83,67 @@ if (isset($_GET[delete])) {
                    header("location:view_mounted_courses?no_internet");
              }
          }
+
+         /////////////////////////////////////////////////////////////////////////////
+        // upload csv
+        if(isset($_POST[import])){
+          
+           
+    
+                //check if file path is empty
+            $extension= end(explode(".", basename($_FILES['file']['name'])));
+            // check if file is csv
+             if($extension== 'csv'){
+
+            
+                    if (!$_FILES["file"]["name"]) {
+                        echo " <font color='red' style='text-decoration:blink'>Please choose a file to upload</font>";
+                        $error = 1;
+                    }
+
+                    elseif (($_FILES["file"]["size"] ) > 250000000000) {
+                        echo "Only files of size less than 250MB accepted";
+                        $error = 3;
+                    }
+
+                    $name = $_FILES["file"]["name"];
+                    //$var= $name.$_SESSION[area];
+
+                    if ($error > 0) {
+
+                    } else {
+
+                        $destination = "uploads/$name";
+                        move_uploaded_file($_FILES["file"]["tmp_name"], $destination);
+                        if (move_uploaded_file) {
+
+                            # create new parseCSV object.
+                            $csv = new parseCSV();
+                          # Parse '_books.csv' using automatic delimiter detection...
+                            $csv->auto($destination);
+
+
+                            //print_r($csv->data);
+
+                            foreach ($csv->data as $key => $row) { 
+
+                               // print_r( $row);
+
+
+                                    $query=$sql->Prepare("INSERT INTO  `tpoly_mounted_courses` SET   `COURSE_CODE`='$row[COURSE_CODE]', `COURSE_NAME`='$row[COURSE_NAME]', `COURSE_CREDIT`='$row[COURSE_CREDIT]', `PROGRAMME`='$row[PROGRAMME]',   `COURSE_SEMESTER`='$row[COURSE_SEMESTER]', `COURSE_LEVEL`='$row[COURSE_LEVEL]', `COURSE_TYPE`='$row[COURSE_TYPE]',`COURSE_YEAR`='$row[COURSE_YEAR]'");
+                                    if($sql->Execute($query)){
+                                        header("location:view_mounted_courses?success=1");
+                                    }
+
+                                }
+
+
+                }
+
+
+            }
+          }
+        }
         
 
 ?>
@@ -114,7 +175,38 @@ if (isset($_GET[delete])) {
 	<!-- BEGIN PAGE CONTENT -->
 	<div class="page-content">
 		<div class="container">
-			 
+			   <div class="modal fade" id="import" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Import Bulk Mounted Courses</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            
+                                            <form action="view_mounted_courses.php" method="POST" class="form-horizontal" role="form" enctype="multipart/form-data">
+                                                 <div class="card-body card-padding">
+                                                     <div class="form-group">
+                                                         <label for="inputPassworsd3" class="col-sm-2 control-label">select csv file</label>
+                                                         <div class="col-sm-10">
+
+                                                             <div class="fg-line">
+                                                                  
+                                                                          <input type="file" required="" class="form-control" name="name"  >                                     
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                <div class="modal-footer">
+                                                      
+                                                        <button type="submit" name="import" class="btn btn-success">Save</button>
+                                                          <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+                                                </div>
+                                                  
+                                                 </div>
+                                             </div>  
+                                            </form>
+                                  </div>
+                                </div>
+                        </div>
 			 <div class="modal fade" id="mount" tabindex="-1" role="dialog" aria-hidden="true">
                                 <div class="modal-dialog modal-lg">
                                     <div class="modal-content">
@@ -162,7 +254,7 @@ if (isset($_GET[delete])) {
                                                                     <?php 
                                                                       global $sql;
 
-                                                                          $query2=$sql->Prepare("SELECT * FROM tpoly_courses ");
+                                                                          $query2=$sql->Prepare("SELECT * FROM tpoly_courses ORDER BY COURSE_NAME ASC ");
 
 
                                                                           $query=$sql->Execute( $query2);
@@ -172,7 +264,7 @@ if (isset($_GET[delete])) {
                                                                          {
 
                                                                          ?>
-                                                                         <option <?php if($_SESSION[course]==$row['COURSE_CODE']){echo 'selected="selected"'; }?> value="<?php echo $row['COURSE_CODE']; ?>"        ><?php echo $row['COURSE_NAME']; ?></option>
+                                                                         <option <?php if($_SESSION[course]==$row['COURSE_CODE']){echo 'selected="selected"'; }?> value="<?php echo $row['COURSE_CODE']; ?>"        ><?php echo $row['COURSE_NAME']." - ".$row['COURSE_CODE']; ?></option>
 
                                                                   <?php }?>
                                                                       </select>
@@ -308,8 +400,10 @@ if (isset($_GET[delete])) {
 											 
                                                         <button type="submit" style="margin-left: -235px;"name="sync" class="btn btn-success">Sync to Online Portal<i class="fa fa-cloud-upload"></i></button>
                                                     </form>
+                                                     <button class="btn  btn-pink waves-effect waves-button" style="margin-top: -58px" data-target="#import" data-toggle="modal">import mounted courses (csv)<i class="fa fa-file-excel-o"></i></button>
+                                                
                                                     <button  data-target="#mount"style="margin-top: -59px" data-toggle="modal" class="btn bgm-pink waves-effect">Mount Course<i class="fa fa-tasks"></i></button>
-                                                 <button   class="btn btn-primary  waves-effect waves-button dropdown-toggle" style="margin-top: -59px" data-toggle="dropdown"><i class="fa fa-bars"></i> Export Data</button>
+                                                 <button   class="btn btn-primary  waves-effect waves-button dropdown-toggle" style="margin-top: -58px" data-toggle="dropdown"><i class="fa fa-bars"></i> Export Data</button>
                                                         <ul class="dropdown-menu">
                                             
                                                             <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'csv',escape:'false'});"><img src='assets/icons/csv.png' width="24"/> CSV</a></li>

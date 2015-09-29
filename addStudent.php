@@ -315,7 +315,7 @@ echo $help->picture("photos/students/$person.jpg", 199) ?>  src="<?php echo file
                                                             <?php
                                                             global $sql;
 
-                                                            $query2 = $sql->Prepare("SELECT * FROM tbl_country");
+                                                            $query2 = $sql->Prepare("SELECT * FROM tbl_country ORDER BY Name ASC");
 
 
                                                             $query = $sql->Execute($query2);
@@ -395,7 +395,7 @@ echo $help->picture("photos/students/$person.jpg", 199) ?>  src="<?php echo file
                                             <div class="form-group">
                                                 <label class="control-label col-md-3">Residential Address</label>
                                                 <div class="col-md-9">
-                                                    <input type="text" class="form-control" required="" name="resident_address" value="<?php echo $rows->RESIDENTIAL_ADDRESS ?>">
+                                                    <input type="text" class="form-control"   name="resident_address" value="<?php echo $rows->RESIDENTIAL_ADDRESS ?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -463,7 +463,7 @@ echo $help->picture("photos/students/$person.jpg", 199) ?>  src="<?php echo file
                                             <div class="form-group">
                                                 <label class="control-label col-md-3">Hall</label>
                                                 <div class="col-md-9">
-                                                    <select class="form-control" required="" name="hall">
+                                                    <select class="form-control"   name="hall">
                                                         <option value=''>Choose hall</option>
 
                                                         <?php
@@ -496,7 +496,7 @@ echo $help->picture("photos/students/$person.jpg", 199) ?>  src="<?php echo file
                                             <div class="form-group">
                                                 <label class="control-label col-md-3">Email</label>
                                                 <div class="col-md-9">
-                                                    <input type="email" class="form-control" value="<?php echo $rows->EMAIL ?>" required="" name="email" >
+                                                    <input type="email" class="form-control" value="<?php echo $rows->EMAIL ?>"  name="email" >
                                                 </div>
                                             </div>
                                         </div>
@@ -567,7 +567,7 @@ echo $help->picture("photos/students/$person.jpg", 199) ?>  src="<?php echo file
                                             <div class="form-group">
                                                 <label class="control-label col-md-3">Guardian Occupation</label>
                                                 <div class="col-md-9">
-                                                    <input type="text" class="form-control" required="" name="goccupation" value="<?php echo $rows->GUARDIAN_OCCUPATION ?>">
+                                                    <input type="text" class="form-control"   name="goccupation" value="<?php echo $rows->GUARDIAN_OCCUPATION ?>">
                                                 </div>
                                             </div>
                                         </div>
